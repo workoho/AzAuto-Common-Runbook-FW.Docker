@@ -1,0 +1,38 @@
+name: Check Upstream
+on:
+  schedule:
+    - cron: "42 3 * * *" # Run workflow every day at 3:42am UTC
+
+jobs:
+  check_upstream:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Pull Upstream Docker image
+        run: docker pull mcr.microsoft.com/powershell:latest
+      - name: Download Upstream Image Last Digest
+        uses: actions/download-artifact@v2
+        with:
+          name: upstream-image-digest
+
+      - name: Pull Our Docker image
+        run: docker pull ghcr.io/${{ github.repository }}:latest
+
+      - name: Check upstreams for changes
+        run: ./scripts/check-upstreams.sh mcr.microsoft.com/powershell:latest ${{ github.repository }}:latest 'Az:AzAccount' 'Microsoft.Graph:Connect-MgGraph' 'ExchangeOnlineManagement:Connect-ExchangeOnline'
+
+      - name: Upload Upstream Image Latest Digest
+        uses: actions/upload-artifact@v2
+        with:
+          name: upstream-image-digest
+          path: upstream-image-digest.txt
+
+      - name: Dispatch build event
+        if: ${{ success() }}
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          event-type: upstream-changed
