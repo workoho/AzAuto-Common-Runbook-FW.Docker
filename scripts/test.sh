@@ -12,7 +12,7 @@ docker run --rm $IMAGE_NAME:$TAG_NAME pwsh -c '$PSVersionTable.PSVersion'
 
 # Run the Docker container and execute the commands to check for each module
 for i in "${!MODULE_NAMES[@]}"; do
-  docker run --rm $IMAGE_NAME:$TAG_NAME pwsh -c "if (!(Import-Module ${MODULE_NAMES[i]} -ErrorAction SilentlyContinue -ErrorVariable ImportErr)) { Write-Error 'Failed importing module ${MODULE_NAMES[i]}: ' -ErrorVariable +ImportErr; exit 1 } elseif ($? && !(Get-Command ${COMMANDS[i]} -ErrorAction SilentlyContinue -ErrorVariable CommandErr)) { Write-Error 'Command ${COMMANDS[i]} not found: ' -ErrorVariable +CommandErr; exit 1 }"
+  docker run --rm $IMAGE_NAME:$TAG_NAME pwsh -c "try { Import-Module ${MODULE_NAMES[i]} -ErrorAction Stop } catch { Write-Error 'Failed importing module ${MODULE_NAMES[i]}: ' + $_; exit 1 } if (!(Get-Command ${COMMANDS[i]})) { Write-Error 'Command ${COMMANDS[i]} not found'; exit 1 }"
 done
 [ $? -ne 0 ] && echo "Failed to validate PowerShell modules" >&2 && exit 1
 
