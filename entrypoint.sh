@@ -1,5 +1,7 @@
 #!/bin/bash
 
+FLAG_FILE=/PSModules.initialized
+
 # Check if the platform is not amd64
 if [ "$(uname -m)" != "x86_64" ]; then
   # Install PowerShell modules
@@ -21,6 +23,9 @@ if [ "$(uname -m)" != "x86_64" ]; then
       }
     }
   "
+
+  # Create the flag file
+  touch $FLAG_FILE
 fi
 
 # If arguments were passed, execute them
