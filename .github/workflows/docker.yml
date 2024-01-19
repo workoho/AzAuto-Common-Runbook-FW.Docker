@@ -30,6 +30,14 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: Determine Dockerfile
+        id: dockerfile
+        run: echo "::set-output name=file::$(if [[ "${{ matrix.platform }}" == "windows/amd64" ]]; then echo Dockerfile.windows; else echo Dockerfile.linux; fi)"
+
+      - name: Get lowercase repository name
+        id: repo_name
+        run: echo "::set-output name=repo::$(echo ${{ github.repository }} | awk '{print tolower($0)}')"
+
       - name: Cache Docker layers
         uses: actions/cache@v4
         with:
@@ -39,10 +47,10 @@ jobs:
             ${{ runner.os }}-buildx-
 
       - name: Build Docker image
-        run: ./scripts/build.sh ${{ github.sha }} azauto-common-runbook-fw ${{ matrix.platform }}
+        run: ./scripts/build.sh ${{ steps.dockerfile.outputs.file }} ${{ github.sha }} ${{ steps.repo_name.outputs.repo }} ${{ matrix.platform }}
 
       - name: Test Docker image
-        run: ./scripts/test.sh ${{ github.sha }} azauto-common-runbook-fw ${{ matrix.platform }}
+        run: ./scripts/test.sh ${{ github.sha }} ${{ steps.repo_name.outputs.repo }} ${{ matrix.platform }}
 
       - name: Bump version and push tag
         id: create_tag
@@ -63,7 +71,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: ghcr.io/${{ github.repository_owner }}/azauto-common-runbook-fw
+          images: ghcr.io/${{ github.repository_owner }}/${{ steps.repo_name.outputs.repo }}
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.x,enable=${{ startsWith(github.ref, 'refs/tags/') }}
@@ -76,6 +84,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./
+          file: ${{ steps.dockerfile.outputs.file }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
