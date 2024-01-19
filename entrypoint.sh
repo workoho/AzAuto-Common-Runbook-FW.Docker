@@ -1,9 +1,10 @@
 #!/bin/bash
 
-FLAG_FILE=/PSModules.initialized
+# Define the flag file
+FLAG_FILE=/path/to/flag/file
 
-# Check if the platform is not amd64
-if [ "$(uname -m)" != "x86_64" ]; then
+# Check if the platform is not amd64 and the flag file does not exist
+if [ "$(uname -m)" != "x86_64" ] && [ ! -f "$FLAG_FILE" ]; then
   # Install PowerShell modules
   pwsh -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "
     Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
