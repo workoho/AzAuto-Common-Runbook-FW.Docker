@@ -11,6 +11,7 @@ on:
 
 jobs:
   build_and_push:
+    name: Build and Push on ${{ matrix.platform }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -19,6 +20,9 @@ jobs:
       matrix:
         platform: [linux/amd64, linux/arm/v7, windows/amd64]
     steps:
+      - name: Display target platform
+        run: echo "Building for target platform ${{ matrix.platform }}"
+
       - name: Checkout repository
         uses: actions/checkout@v3
 
