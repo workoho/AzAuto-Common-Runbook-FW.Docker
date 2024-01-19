@@ -23,5 +23,10 @@ if [ "$(uname -m)" != "x86_64" ]; then
   "
 fi
 
-# Execute the main command
-exec "$@"
+# If arguments were passed, execute them
+if [ "$#" -gt 0 ]; then
+  exec "$@"
+else
+  # Execute the default command
+  exec pwsh
+fi
