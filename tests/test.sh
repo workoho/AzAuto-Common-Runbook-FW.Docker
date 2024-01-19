@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define variables
-IMAGE_NAME=$2
+IMAGE_NAME=$(echo $2 | tr '[:upper:]' '[:lower:]')
 TAG_NAME=$1
 MODULE_NAMES=('Az.Accounts' 'Microsoft.Graph.Authentication' 'Microsoft.Graph.Beta.Users' 'ExchangeOnlineManagement')
 COMMANDS=("Connect-AzAccount" "Connect-MgGraph" "Get-MgBetaUser" "Connect-ExchangeOnline")
