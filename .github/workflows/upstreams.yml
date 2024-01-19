@@ -8,12 +8,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Pull Upstream Docker image
         run: docker pull mcr.microsoft.com/powershell:latest
+
       - name: Download Upstream Image Last Digest
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: upstream-image-digest
 
@@ -24,14 +25,14 @@ jobs:
         run: ./scripts/check-upstreams.sh mcr.microsoft.com/powershell:latest ${{ github.repository }}:latest 'Az' 'Microsoft.Graph' 'ExchangeOnlineManagement'
 
       - name: Upload Upstream Image Latest Digest
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: upstream-image-digest
           path: upstream-image-digest.txt
 
       - name: Dispatch build event
         if: ${{ success() }}
-        uses: peter-evans/repository-dispatch@v1
+        uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
