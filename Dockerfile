@@ -1,5 +1,8 @@
 FROM mcr.microsoft.com/powershell:latest
 
+ARG TARGETPLATFORM
+ENV TARGETPLATFORM=${TARGETPLATFORM}
+
 ARG MODULES='Az,Microsoft.Graph,Microsoft.Graph.Beta,ExchangeOnlineManagement'
 ENV MODULES=${MODULES}
 
