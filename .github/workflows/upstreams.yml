@@ -2,6 +2,7 @@ name: Check Upstream
 on:
   schedule:
     - cron: "42 3 * * *" # Run workflow every day at 3:42am UTC
+  workflow_dispatch:
 
 jobs:
   check_upstream:
