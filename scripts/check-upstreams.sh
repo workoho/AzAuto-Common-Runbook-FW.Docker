@@ -36,24 +36,23 @@ fi
 
 # Define the image name
 IMAGE_NAME="$2"
-module_commands=("${@:2}")
+modules=("${@:3}")
 
-# Loop over the module-command pairs
-for module_command in "${module_commands[@]}"; do
-    # Split the module-command pair into the module and command
-    IFS=':' read -r module command <<< "$module_command"
+# Loop over the modules
+for module in "${modules[@]}"; do
+    # Get the latest version from the PowerShell Gallery
+    latest_version=$(docker run --rm $IMAGE_NAME pwsh -Command "Find-Module -Name $module | Select-Object -ExpandProperty Version")
 
-    # Import the module and check if the command is available
-    command_check=$(docker run --rm $IMAGE_NAME pwsh -Command "Import-Module $module; if (Get-Command $command) { echo 'Command available' } else { echo 'Command not available'; exit 1 }")
+    # Get the installed version
+    installed_version=$(docker run --rm $IMAGE_NAME pwsh -Command "(Get-Module -ListAvailable -Name $module).Version")
 
-    # Check if the command was not available
-    if [[ $command_check == 'Command not available' ]]; then
-        echo "For module $module and command $command, $command_check"
+    # Compare the versions
+    if [ "$latest_version" != "$installed_version" ]; then
+        echo "The $module module has been updated. Latest version: $latest_version. Installed version: $installed_version."
         exit 1
     fi
-
-    # Print the result
-    echo "For module $module and command $command, $command_check"
 done
+
+echo "The upstream PowerShell modules have not changed."
 
 exit 0

@@ -21,7 +21,7 @@ jobs:
         run: docker pull ghcr.io/${{ github.repository }}:latest
 
       - name: Check upstreams for changes
-        run: ./scripts/check-upstreams.sh mcr.microsoft.com/powershell:latest ${{ github.repository }}:latest 'Az:AzAccount' 'Microsoft.Graph:Connect-MgGraph' 'ExchangeOnlineManagement:Connect-ExchangeOnline'
+        run: ./scripts/check-upstreams.sh mcr.microsoft.com/powershell:latest ${{ github.repository }}:latest 'Az' 'Microsoft.Graph' 'ExchangeOnlineManagement'
 
       - name: Upload Upstream Image Latest Digest
         uses: actions/upload-artifact@v2
