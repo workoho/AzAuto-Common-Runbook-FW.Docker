@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define the flag file
-FLAG_FILE=/path/to/flag/file
+FLAG_FILE=/AzAuto-Common-Runbook-FW.Initialized
 
 # Check if the platform is not amd64 and the flag file does not exist
 if [ "$(uname -m)" != "x86_64" ] && [ ! -f "$FLAG_FILE" ]; then
