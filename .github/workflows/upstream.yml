@@ -1,0 +1,22 @@
+name: Check Upstream
+on:
+  schedule:
+    - cron: "42 3 * * *" # Run workflow every day at 3:42am UTC
+
+jobs:
+  check_upstream:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Check upstream for changes
+        run: ./scripts/check-upstream.sh
+
+      - name: Dispatch build event
+        if: ${{ success() }}
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          event-type: upstream-changed

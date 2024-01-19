@@ -1,0 +1,55 @@
+name: Build and Push Docker Image
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "Dockerfile"
+  repository_dispatch:
+    types: [upstream-changed]
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Build Docker image
+        run: ./scripts/build.sh ${{ github.sha }} ${{ github.repository }}
+
+      - name: Test Docker image
+        run: ./scripts/test.sh ${{ github.sha }} ${{ github.repository }}
+
+      - name: Bump version and push tag
+        id: create_tag
+        uses: anothrNick/github-tag-action@1.34.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+          DEFAULT_BUMP: patch
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          push: true
+          tags: ghcr.io/${{ github.repository }}:${{ steps.create_tag.outputs.new_tag }}
