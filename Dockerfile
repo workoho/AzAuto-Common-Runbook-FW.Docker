@@ -6,10 +6,12 @@ ENV MODULES=${MODULES}
 ARG MODULE_VERSIONS='11.2:11.65535,2.11:2.65535,2.11:2.65535,3.4:3.65535'
 ENV MODULE_VERSIONS=${MODULE_VERSIONS}
 
-RUN pwsh \
+RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
+  pwsh \
   -NoLogo \
   -NoProfile \
   -NonInteractive \
+  -ExecutionPolicy Bypass \
   -Command " \
   Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted; \
   \$ErrorActionPreference = 'Stop' ; \
@@ -32,7 +34,12 @@ RUN pwsh \
       Write-Error 'Invalid version format for module \$module' ; \
       exit 1 ; \
     } \
-  }"
+  }"; \
+fi
+
+COPY entrypoint.sh /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
 
 LABEL description="# Welcome to Azure Automation Common Runbook Framework \
 To start learning about the framework checkout the [project page](https://github.com/Workoho/AzAuto-Common-Runbook-FW)"
