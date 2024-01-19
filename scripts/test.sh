@@ -1,10 +1,13 @@
 #!/bin/bash
 
 # Define variables
+TARGETPLATFORM=$3
 IMAGE_NAME=$(echo $2 | tr '[:upper:]' '[:lower:]')
 TAG_NAME=$1
 MODULE_NAMES=('Az.Accounts' 'Microsoft.Graph.Authentication' 'Microsoft.Graph.Beta.Users' 'ExchangeOnlineManagement')
 COMMANDS=('Connect-AzAccount' 'Connect-MgGraph' 'Get-MgBetaUser' 'Connect-ExchangeOnline')
+
+[ $TARGETPLATFORM != 'linux/amd64' ] && echo "Skipping test for $TARGETPLATFORM" >&2 && exit 0
 
 # Run the Docker container and execute the command to check for pwsh
 docker run --rm $IMAGE_NAME:$TAG_NAME pwsh -c '$PSVersionTable.PSVersion'
