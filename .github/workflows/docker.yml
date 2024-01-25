@@ -32,11 +32,19 @@ jobs:
 
       - name: Determine Dockerfile
         id: dockerfile
-        run: echo "::set-output name=file::$(if [[ "${{ matrix.platform }}" == "windows/amd64" ]]; then echo Dockerfile.windows; else echo Dockerfile.linux; fi)"
+        shell: bash
+        run: |
+          if [[ "${{ matrix.platform }}" == "windows/amd64" ]]; then 
+            echo 'DOCKERFILE=Dockerfile.windows' >> $GITHUB_ENV
+          else 
+            echo 'DOCKERFILE=Dockerfile.linux' >> $GITHUB_ENV
+          fi
+        env:
+          DOCKERFILE: ${{ env.DOCKERFILE }}
 
-      - name: Get lowercase repository name
-        id: repo_name
-        run: echo "::set-output name=repo::$(echo ${{ github.repository }} | awk '{print tolower($0)}')"
+      - name: Set Dockerfile output
+        id: dockerfile_output
+        run: echo "::set-output name=file::$DOCKERFILE"
 
       - name: Cache Docker layers
         uses: actions/cache@v4

@@ -1,0 +1,25 @@
+{
+    "recommendations": [
+        // Code Editing related extensions
+        "editorconfig.editorconfig",
+
+        // Git related extensions
+        "eamodio.gitlens",
+
+        // GitHub related extensions
+        "github.vscode-github-actions",
+        "me-dutour-mathieu.vscode-github-actions",
+        "ms-vscode.vscode-github-issue-notebooks",
+        "github.vscode-pull-request-github",
+
+        // Markdown related extensions
+        "davidanson.vscode-markdownlint",
+        "yzhang.markdown-all-in-one",
+
+        // YAML related extensions
+        "redhat.vscode-yaml",
+
+        // Docker related extensions
+        "ms-azuretools.vscode-docker"
+    ]
+}
