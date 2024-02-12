@@ -7,6 +7,8 @@ on:
 jobs:
   check_upstream:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     env:
       GITHUB_REPO_LOWER: ${{ github.repository }}
     steps:
