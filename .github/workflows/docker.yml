@@ -31,7 +31,10 @@ jobs:
         echo "GITHUB_REPO_OWNER_LOWER=$(echo ${{ env.GITHUB_REPO_OWNER_LOWER }} | awk '{print tolower($0)}')" >> $GITHUB_ENV
 
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
@@ -44,7 +47,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Build and push
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v5
       with:
           context: .
           push: true
