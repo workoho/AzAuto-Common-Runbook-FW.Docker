@@ -37,7 +37,7 @@ jobs:
       - name: Check upstreams for changes
         id: check_upstreams
         run: |
-          exec 3> >(tee >(cat - >&2))
+          exec 3>&1
           output=$(./scripts/check-upstreams.sh mcr.microsoft.com/powershell:latest ghcr.io/workoho/azauto-common-runbook-fw:latest 'Az' 'Microsoft.Graph' 'ExchangeOnlineManagement' 'PnP.PowerShell' >&3)
           if [[ -n "$output" ]]; then
             echo "HAS_CHANGES=true" >> $GITHUB_ENV
