@@ -20,7 +20,7 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: upstream-image-digest.txt
-          key: upstream-image-digest
+          key: upstream-image-digest-
         continue-on-error: true
 
       - name: Login to GitHub Container Registry
@@ -41,7 +41,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: upstream-image-digest.txt
-          key: upstream-image-digest
+          key: upstream-image-digest-${{ github.run_number }}
 
       - name: Dispatch build event
         if: ${{ success() }}
