@@ -19,7 +19,7 @@ fi
 
 # Compare the digests
 if [ "$LATEST_DIGEST" != "$PREVIOUS_DIGEST" ]; then
-    echo -e "\e[31mThe upstream image has changed.\e[0m" >&2
+    echo -e "\e[31mThe upstream image has changed.\e[0m" >&3
 
     # Save the latest digest to a file for future comparisons
     echo $LATEST_DIGEST >upstream-image-digest.txt
@@ -55,12 +55,12 @@ if docker image inspect $IMAGE_NAME >/dev/null 2>&1; then
             }
         "
         if [ $? -eq 1 ]; then
-            echo -e "\e[31mThe upstream PowerShell modules have changed.\e[0m" >&2
+            echo -e "\e[31mThe upstream PowerShell modules have changed.\e[0m" >&3
             exit 0
         fi
     done
 else
-    echo -e "\e[31mThe image $IMAGE_NAME was not found, triggering re-build.\e[0m" >&2
+    echo -e "\e[31mThe image $IMAGE_NAME was not found, triggering re-build.\e[0m" >&3
     exit 0
 fi
 
