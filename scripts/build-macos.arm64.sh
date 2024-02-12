@@ -25,7 +25,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-docker push ghcr.io/workoho/azauto-common-runbook-fw:mariner-2.0-amd64
+docker push ghcr.io/workoho/azauto-common-runbook-fw:mariner-2.0-arm64
 
 docker manifest create --amend ghcr.io/workoho/azauto-common-runbook-fw:latest \
     ghcr.io/workoho/azauto-common-runbook-fw:mariner-2.0-amd64 \
