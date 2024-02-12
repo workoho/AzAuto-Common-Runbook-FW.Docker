@@ -18,10 +18,11 @@ jobs:
       - name: Pull Upstream Docker image
         run: docker pull mcr.microsoft.com/powershell:latest
 
-      - name: Download Upstream Image Last Digest
-        uses: actions/download-artifact@v4
+      - name: Restore upstream image digest
+        uses: actions/cache/restore@v4
         with:
-          name: upstream-image-digest
+          path: upstream-image-digest.txt
+          key: upstream-image-digest
         continue-on-error: true
 
       - name: Convert REPO_LOWER to lowercase
@@ -37,11 +38,11 @@ jobs:
       - name: Check upstreams for changes
         run: ./scripts/check-upstreams.sh mcr.microsoft.com/powershell:latest ghcr.io/workoho/azauto-common-runbook-fw:latest 'Az' 'Microsoft.Graph' 'ExchangeOnlineManagement'
 
-      - name: Upload Upstream Image Latest Digest
-        uses: actions/upload-artifact@v4
+      - name: Cache upstream image digest
+        uses: actions/cache/save@v4
         with:
-          name: upstream-image-digest
           path: upstream-image-digest.txt
+          key: upstream-image-digest
 
       - name: Dispatch build event
         if: ${{ success() }}
