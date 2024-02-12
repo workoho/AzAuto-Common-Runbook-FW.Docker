@@ -13,7 +13,7 @@ concurrency:
     cancel-in-progress: true
 
 jobs:
-  build-linux-amd64:
+  build:
     name: linux/amd64
     runs-on: ubuntu-latest
     permissions:
@@ -51,21 +51,21 @@ jobs:
       with:
           context: .
           push: true
-          tags: ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:mariner-2.0-amd64-2
+          tags: ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:mariner-2.0-amd64
           file: ./linux/amd64/Dockerfile
-          platforms: linux/amd64
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
     - name: Create and push manifest
       run: |
         docker manifest create ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:mariner-2.0 \
-        ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:mariner-2.0-amd64-2
+        ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:mariner-2.0-amd64
         docker manifest push ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:mariner-2.0
 
-  publish-latest-manifest:
-    needs: build-linux-amd64
+  merge:
     name: Create and push :latest manifest
+    needs:
+        - build
     runs-on: ubuntu-latest
     permissions:
       contents: write
