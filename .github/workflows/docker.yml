@@ -1,10 +1,10 @@
-name: Build and Push Docker Image
+name: Build Linux Docker Image
 on:
   push:
     branches:
       - main
     paths:
-      - "Dockerfile"
+      - "Dockerfile.*"
   repository_dispatch:
     types: [upstream-changed]
   workflow_dispatch:
@@ -16,6 +16,9 @@ jobs:
     permissions:
       contents: write
       packages: write
+    env:
+      GITHUB_REPO_LOWER: ${{ github.repository }}
+      GITHUB_REPO_OWNER_LOWER: ${{ github.repository_owner }}
     strategy:
       fail-fast: false
       matrix:
@@ -24,8 +27,14 @@ jobs:
       - name: Display target platform
         run: echo "Building for target platform ${{ matrix.platform }}"
 
+      - name: Set repo name to lowercase
+        id: repo
+        run: |
+          echo "GITHUB_REPO_LOWER=$(echo ${{ env.GITHUB_REPO_LOWER }} | awk '{print tolower($0)}')" >> $GITHUB_ENV
+          echo "GITHUB_REPO_OWNER_LOWER=$(echo ${{ env.GITHUB_REPO_OWNER_LOWER }} | awk '{print tolower($0)}')" >> $GITHUB_ENV
+
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -55,10 +64,10 @@ jobs:
             ${{ runner.os }}-buildx-
 
       - name: Build Docker image
-        run: ./scripts/build.sh ${{ steps.dockerfile.outputs.file }} ${{ github.sha }} ${{ steps.repo_name.outputs.repo }} ${{ matrix.platform }}
+        run: ./scripts/build.sh Dockerfile.linux ${{ github.sha }} ${{ env.GITHUB_REPO_LOWER }} ${{ matrix.platform }}
 
       - name: Test Docker image
-        run: ./scripts/test.sh ${{ github.sha }} ${{ steps.repo_name.outputs.repo }} ${{ matrix.platform }}
+        run: ./scripts/test.sh ${{ github.sha }} ${{ env.GITHUB_REPO_LOWER }} ${{ matrix.platform }}
 
       - name: Bump version and push tag
         id: create_tag
@@ -79,7 +88,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: ghcr.io/${{ github.repository_owner }}/${{ steps.repo_name.outputs.repo }}
+          images: ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/${{ env.GITHUB_REPO_LOWER }}
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.x,enable=${{ startsWith(github.ref, 'refs/tags/') }}
