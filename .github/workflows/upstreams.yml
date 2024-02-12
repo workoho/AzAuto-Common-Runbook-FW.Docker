@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Pull Upstream Docker image
         run: docker pull mcr.microsoft.com/powershell:latest
@@ -19,6 +19,7 @@ jobs:
         with:
           name: upstream-image-digest
           path: upstream-image-digest.txt
+        continue-on-error: true
 
       - name: Pull Our Docker image
         run: docker pull ghcr.io/${{ github.repository }}:latest
