@@ -1,11 +1,3 @@
-.git/
-.github/
-.gitignore
-.gitattributes
-.mailmap
-.markdownlint.json
-*.code-workspace
-
 # Created by https://www.toptal.com/developers/gitignore/api/git,linux,macos,windows,visualstudiocode,dotenv
 # Edit at https://www.toptal.com/developers/gitignore?templates=git,linux,macos,windows,visualstudiocode,dotenv
 
