@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/powershell:mariner-2.0
+FROM mcr.microsoft.com/powershell:latest
 
 ARG MODULES='Az,Microsoft.Graph,Microsoft.Graph.Beta,ExchangeOnlineManagement,PnP.PowerShell'
 ENV MODULES=${MODULES}
