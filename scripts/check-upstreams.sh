@@ -42,15 +42,19 @@ modules=("${@:3}")
 if docker image inspect $IMAGE_NAME >/dev/null 2>&1; then
     # Loop over the modules
     for module in "${modules[@]}"; do
-        # Get the latest version from the PowerShell Gallery
-        latest_version=$(docker run --rm $IMAGE_NAME pwsh -Command "Find-Module -Name $module | Select-Object -ExpandProperty Version")
-
-        # Get the installed version
-        installed_version=$(docker run --rm $IMAGE_NAME pwsh -Command "(Get-Module -ListAvailable -Name $module).Version")
-
-        # Compare the versions
-        if [ "$latest_version" != "$installed_version" ]; then
-            echo "The $module module has been updated. Latest version: $latest_version. Installed version: $installed_version."
+        # Get the latest version from the PowerShell Gallery and the installed version, and compare them
+        docker run --rm -e POWERSHELL_TELEMETRY_OPTOUT=1 $IMAGE_NAME pwsh -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "
+            \$latest_version = Find-Module -Name $module | Select-Object -ExpandProperty Version
+            \$installed_version = (Get-Module -ListAvailable -Name $module).Version
+            if ([version]\$latest_version -gt [version]\$installed_version) {
+                Write-Host \"   [Changed] $module - Latest version: \$latest_version > \$installed_version\"
+                exit 1
+            }
+            else {
+                Write-Host \"   [Up-to-date] $module - Installed version: \$installed_version\"
+            }
+        "
+        if [ $? -eq 1 ]; then
             exit 0
         fi
     done
