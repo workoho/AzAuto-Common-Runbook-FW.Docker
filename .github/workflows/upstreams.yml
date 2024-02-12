@@ -23,6 +23,9 @@ jobs:
           path: upstream-image-digest.txt
         continue-on-error: true
 
+      - name: Convert REPO_LOWER to lowercase
+        run: echo "GITHUB_REPO_LOWER=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
       - name: Pull Our Docker image
         run: docker pull ghcr.io/${{ env.GITHUB_REPO_LOWER }}:latest
 
