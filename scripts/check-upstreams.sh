@@ -27,7 +27,7 @@ if [ "$LATEST_DIGEST" != "$PREVIOUS_DIGEST" ]; then
     # Exit with a 0 status to indicate that the image has changed and the workflow may continue
     exit 0
 else
-    echo "The upstream image has not changed."
+    echo -e "\e[32mThe upstream image has not changed.\e[0m"
 fi
 
 ################################
@@ -51,7 +51,7 @@ if docker image inspect $IMAGE_NAME >/dev/null 2>&1; then
                 exit 1
             }
             else {
-                Write-Verbose \"[Up-to-date] $module - Installed version: \$installed_version\" -Verbose
+                Write-Host \"[Up-to-date] $module - Installed version: \$installed_version\" -Color Green
             }
         "
         if [ $? -eq 1 ]; then
@@ -64,6 +64,6 @@ else
     exit 0
 fi
 
-echo "The upstream PowerShell modules have not changed."
+echo -e "\e[32mThe upstream PowerShell modules have not changed.\e[0m"
 
 exit 0
