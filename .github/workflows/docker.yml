@@ -50,6 +50,7 @@ jobs:
           push: true
           tags: ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:mariner-2.0-amd64
           file: ./linux/amd64/Dockerfile
+          platforms: linux/amd64
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
