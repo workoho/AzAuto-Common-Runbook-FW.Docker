@@ -31,7 +31,7 @@ jobs:
         run: echo "${{ secrets.GHCR_PAT_READ }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Pull Our Docker image
-        run: docker pull ghcr.io/${{ env.GITHUB_REPO_LOWER }}:latest
+        run: docker pull ghcr.io/workoho/azauto-common-runbook-fw:latest
         continue-on-error: true
 
       - name: Check upstreams for changes
