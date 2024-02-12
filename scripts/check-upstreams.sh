@@ -24,8 +24,8 @@ if [ "$LATEST_DIGEST" != "$PREVIOUS_DIGEST" ]; then
     # Save the latest digest to a file for future comparisons
     echo $LATEST_DIGEST >upstream-image-digest.txt
 
-    # Exit with a non-zero status to indicate that the image has changed
-    exit 1
+    # Exit with a 0 status to indicate that the image has changed and the workflow may continue
+    exit 0
 else
     echo "The upstream image has not changed."
 fi
