@@ -55,9 +55,9 @@ jobs:
 
     - name: Create and push manifest
       run: |
-        docker manifest create azauto-common-runbook-fw:mariner-2.0 \
-        azauto-common-runbook-fw:mariner-2.0-amd64
-        docker manifest push azauto-common-runbook-fw:mariner-2.0
+        docker manifest create ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:mariner-2.0 \
+        ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:mariner-2.0-amd64
+        docker manifest push ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:mariner-2.0
 
   publish-latest-manifest:
     needs: build-linux-amd64
@@ -66,10 +66,19 @@ jobs:
     permissions:
       contents: write
       packages: write
+    env:
+      GITHUB_REPO_LOWER: ${{ github.repository }}
+      GITHUB_REPO_OWNER_LOWER: ${{ github.repository_owner }}
 
     steps:
+    - name: Set repo name to lowercase
+      id: repo
+      run: |
+        echo "GITHUB_REPO_LOWER=$(echo ${{ env.GITHUB_REPO_LOWER }} | awk '{print tolower($0)}')" >> $GITHUB_ENV
+        echo "GITHUB_REPO_OWNER_LOWER=$(echo ${{ env.GITHUB_REPO_OWNER_LOWER }} | awk '{print tolower($0)}')" >> $GITHUB_ENV
+
     - name: Create and push manifest
       run: |
-        docker manifest create azauto-common-runbook-fw:latest \
-        azauto-common-runbook-fw:mariner-2.0-amd64
-        docker manifest push azauto-common-runbook-fw:latest
+        docker manifest create ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:latest \
+        ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:mariner-2.0-amd64
+        docker manifest push ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:latest
