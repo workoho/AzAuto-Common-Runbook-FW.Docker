@@ -35,7 +35,7 @@ jobs:
         continue-on-error: true
 
       - name: Check upstreams for changes
-        run: ./scripts/check-upstreams.sh mcr.microsoft.com/powershell:latest ${{ env.GITHUB_REPO_LOWER }}:latest 'Az' 'Microsoft.Graph' 'ExchangeOnlineManagement'
+        run: ./scripts/check-upstreams.sh mcr.microsoft.com/powershell:latest ghcr.io/workoho/azauto-common-runbook-fw:latest 'Az' 'Microsoft.Graph' 'ExchangeOnlineManagement'
 
       - name: Upload Upstream Image Latest Digest
         uses: actions/upload-artifact@v4
