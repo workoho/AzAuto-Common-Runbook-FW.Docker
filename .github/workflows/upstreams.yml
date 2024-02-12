@@ -40,9 +40,9 @@ jobs:
           exec 3>&1
           output=$(./scripts/check-upstreams.sh mcr.microsoft.com/powershell:latest ghcr.io/workoho/azauto-common-runbook-fw:latest 'Az' 'Microsoft.Graph' 'ExchangeOnlineManagement' 'PnP.PowerShell' 2>&1 1>&3 | tee /dev/fd/2)
           if [[ -n "$output" ]]; then
-            echo "::set-output name=has_changes::true"
+            echo "HAS_CHANGES=true" >> $GITHUB_ENV
           else
-            echo "::set-output name=has_changes::false"
+            echo "HAS_CHANGES=false" >> $GITHUB_ENV
           fi
 
       - name: Cache upstream image digest
@@ -52,7 +52,9 @@ jobs:
           key: upstream-image-digest-${{ github.run_number }}
 
       - name: Dispatch build event
-        if: steps.check_upstreams.outputs.has_changes == 'true'
+        env:
+          HAS_CHANGES: ${{ env.HAS_CHANGES }}
+        if: env.HAS_CHANGES == 'true'
         uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}

@@ -51,7 +51,7 @@ if docker image inspect $IMAGE_NAME >/dev/null 2>&1; then
                 exit 1
             }
             else {
-                Write-Host \"[Up-to-date] $module - Installed version: \$installed_version\" -Color Green
+                Write-Host \"[Up-to-date] $module - Installed version: \$installed_version\" -ForegroundColor Green
             }
         "
         if [ $? -eq 1 ]; then
