@@ -1,5 +1,5 @@
 {
-	"name": "Azure Automation Common Runbook Framework",
+	"name": "AzAuto-Common-Runbook-FW",
 	"image": "ghcr.io/workoho/azauto-common-runbook-fw:latest",
 	"features": {
 		"ghcr.io/devcontainers/features/common-utils:2": {

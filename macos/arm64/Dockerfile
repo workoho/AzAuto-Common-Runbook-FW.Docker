@@ -4,12 +4,6 @@
 
 FROM arm64v8/debian:bookworm AS installer-env
 
-ARG MODULES='Az,Microsoft.Graph,Microsoft.Graph.Beta,ExchangeOnlineManagement,PnP.PowerShell'
-ENV MODULES=${MODULES}
-
-ARG MODULE_VERSIONS='11.3:11.65535,2.13:2.65535,2.13:2.65535,3.4:3.65535,2.3:2.65535'
-ENV MODULE_VERSIONS=${MODULE_VERSIONS}
-
 RUN --mount=type=cache,target=/var/lib/apt \
     --mount=type=cache,target=/var/cache/apt \
     DEBIAN_FRONTEND=noninteractive apt-get update \
@@ -30,6 +24,12 @@ RUN --mount=type=cache,target=/var/lib/apt \
 
 # Install the tar.gz file in this image and make powershell available
 FROM arm64v8/debian:bookworm AS final-image
+
+ARG MODULES='Az,Microsoft.Graph,Microsoft.Graph.Beta,ExchangeOnlineManagement,PnP.PowerShell'
+ENV MODULES=${MODULES}
+
+ARG MODULE_VERSIONS='11.3:11.65535,2.13:2.65535,2.13:2.65535,3.4:3.65535,2.3:2.65535'
+ENV MODULE_VERSIONS=${MODULE_VERSIONS}
 
 # Define ENVs for Localization/Globalization
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false \
