@@ -36,7 +36,7 @@ jobs:
         continue-on-error: true
 
       - name: Check upstreams for changes
-        run: ./scripts/check-upstreams.sh mcr.microsoft.com/powershell:latest ghcr.io/workoho/azauto-common-runbook-fw:latest 'Az' 'Microsoft.Graph' 'ExchangeOnlineManagement'
+        run: ./scripts/check-upstreams.sh mcr.microsoft.com/powershell:latest ghcr.io/workoho/azauto-common-runbook-fw:latest 'Az' 'Microsoft.Graph' 'ExchangeOnlineManagement' 'PnP.PowerShell'
 
       - name: Cache upstream image digest
         uses: actions/cache/save@v4
