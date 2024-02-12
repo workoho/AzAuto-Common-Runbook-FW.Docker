@@ -55,6 +55,7 @@ jobs:
           file: ./linux/amd64/Dockerfile
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          provenance: false
 
     - name: Create and push manifest
       run: |
