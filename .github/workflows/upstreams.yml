@@ -31,6 +31,7 @@ jobs:
 
       - name: Pull Our Docker image
         run: docker pull ghcr.io/${{ env.GITHUB_REPO_LOWER }}:latest
+        continue-on-error: true
 
       - name: Check upstreams for changes
         run: ./scripts/check-upstreams.sh mcr.microsoft.com/powershell:latest ${{ env.GITHUB_REPO_LOWER }}:latest 'Az' 'Microsoft.Graph' 'ExchangeOnlineManagement'
