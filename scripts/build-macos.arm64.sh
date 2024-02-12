@@ -12,18 +12,20 @@ pushd "$(dirname "$0")/.." > /dev/null
 # Ensure we return to the original directory on exit
 trap "popd > /dev/null" EXIT
 
-# Build the Docker image
-docker build --file ./macos/arm64/Dockerfile -t azauto-common-runbook-fw:mariner-2.0-arm64 ./macos/arm64
-if [ $? -ne 0 ]; then
-    exit 1
-fi
-
-docker tag azauto-common-runbook-fw:mariner-2.0-arm64 ghcr.io/workoho/azauto-common-runbook-fw:mariner-2.0-arm64
-
+# Log in to the Docker registry
 docker login ghcr.io
 if [ $? -ne 0 ]; then
     exit 1
 fi
+
+# Build the Docker image
+docker build --file ./macos/arm64/Dockerfile -t azauto-common-runbook-fw:mariner-2.0-arm64 ./macos/arm64
+if [ $? -ne 0 ]; then
+    docker logout ghcr.io
+    exit 1
+fi
+
+docker tag azauto-common-runbook-fw:mariner-2.0-arm64 ghcr.io/workoho/azauto-common-runbook-fw:mariner-2.0-arm64
 
 docker push ghcr.io/workoho/azauto-common-runbook-fw:mariner-2.0-arm64
 
@@ -31,5 +33,8 @@ docker manifest create --amend ghcr.io/workoho/azauto-common-runbook-fw:latest \
     ghcr.io/workoho/azauto-common-runbook-fw:mariner-2.0-amd64 \
     ghcr.io/workoho/azauto-common-runbook-fw:mariner-2.0-arm64
 docker manifest push --purge ghcr.io/workoho/azauto-common-runbook-fw:latest
+
+# Log out of the Docker registry
+docker logout ghcr.io
 
 exit 0
