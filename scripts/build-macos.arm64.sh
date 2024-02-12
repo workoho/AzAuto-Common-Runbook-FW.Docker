@@ -29,7 +29,7 @@ docker tag azauto-common-runbook-fw:mariner-2.0-arm64 ghcr.io/workoho/azauto-com
 docker push ghcr.io/workoho/azauto-common-runbook-fw:mariner-2.0-arm64
 
 docker manifest create --amend ghcr.io/workoho/azauto-common-runbook-fw:latest \
-    ghcr.io/workoho/azauto-common-runbook-fw:mariner-2.0-amd64 \
+    ghcr.io/workoho/azauto-common-runbook-fw:debian-12 \
     ghcr.io/workoho/azauto-common-runbook-fw:mariner-2.0-arm64
 docker manifest push --purge ghcr.io/workoho/azauto-common-runbook-fw:latest
 

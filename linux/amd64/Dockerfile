@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/powershell:latest
+FROM mcr.microsoft.com/powershell:debian-12
 
 ARG MODULES='Az,Microsoft.Graph,Microsoft.Graph.Beta,ExchangeOnlineManagement,PnP.PowerShell'
 ENV MODULES=${MODULES}

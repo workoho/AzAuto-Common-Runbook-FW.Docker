@@ -52,17 +52,11 @@ jobs:
       with:
           context: .
           push: true
-          tags: ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:mariner-2.0-amd64
+          tags: ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:debian-12
           file: ./linux/amd64/Dockerfile
           cache-from: type=gha
           cache-to: type=gha,mode=max
           provenance: false
-
-    - name: Create and push manifest
-      run: |
-        docker manifest create ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:mariner-2.0 \
-        ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:mariner-2.0-amd64
-        docker manifest push ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:mariner-2.0
 
   merge:
     name: Update :latest manifest
@@ -92,6 +86,6 @@ jobs:
     - name: Create and push manifest
       run: |
         docker manifest create --amend ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:latest \
-          ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:mariner-2.0-amd64 \
+          ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:debian-12 \
           ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:mariner-2.0-arm64
         docker manifest push --purge ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:latest
