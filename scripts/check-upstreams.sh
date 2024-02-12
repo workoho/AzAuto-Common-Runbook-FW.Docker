@@ -51,14 +51,14 @@ if docker image inspect $IMAGE_NAME >/dev/null 2>&1; then
         # Compare the versions
         if [ "$latest_version" != "$installed_version" ]; then
             echo "The $module module has been updated. Latest version: $latest_version. Installed version: $installed_version."
-            exit 1
+            exit 0
         fi
     done
 else
     echo "The image $IMAGE_NAME was not found, triggering re-build."
-    exit 1
+    exit 0
 fi
 
 echo "The upstream PowerShell modules have not changed."
 
-exit 0
+exit 78
