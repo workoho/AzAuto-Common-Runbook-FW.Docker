@@ -33,10 +33,16 @@ jobs:
   
       - name: Pull Our Docker image
         run: docker pull ghcr.io/workoho/azauto-common-runbook-fw:latest
-        continue-on-error: true
 
       - name: Check upstreams for changes
-        run: ./scripts/check-upstreams.sh mcr.microsoft.com/powershell:latest ghcr.io/workoho/azauto-common-runbook-fw:latest 'Az' 'Microsoft.Graph' 'ExchangeOnlineManagement' 'PnP.PowerShell'
+        run: |
+          exec 3>&1
+          output=$(./scripts/check-upstreams.sh mcr.microsoft.com/powershell:latest ghcr.io/workoho/azauto-common-runbook-fw:latest 'Az' 'Microsoft.Graph' 'ExchangeOnlineManagement' 'PnP.PowerShell' 2>&1 1>&3 | tee /dev/fd/2)
+          if [[ -n "$output" ]]; then
+            echo "HAS_CHANGES=true" >> $GITHUB_ENV
+          else
+            echo "HAS_CHANGES=false" >> $GITHUB_ENV
+          fi
 
       - name: Cache upstream image digest
         uses: actions/cache/save@v4
@@ -45,7 +51,9 @@ jobs:
           key: upstream-image-digest-${{ github.run_number }}
 
       - name: Dispatch build event
-        if: ${{ success() }}
+        env:
+          HAS_CHANGES: ${{ env.HAS_CHANGES }}
+        if: ${{ env.HAS_CHANGES }} == true
         uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}

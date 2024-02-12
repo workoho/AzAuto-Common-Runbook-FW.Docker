@@ -19,7 +19,7 @@ fi
 
 # Compare the digests
 if [ "$LATEST_DIGEST" != "$PREVIOUS_DIGEST" ]; then
-    echo "The upstream image has changed."
+    echo -e "\e[31mThe upstream image has changed.\e[0m" >&2
 
     # Save the latest digest to a file for future comparisons
     echo $LATEST_DIGEST >upstream-image-digest.txt
@@ -47,22 +47,23 @@ if docker image inspect $IMAGE_NAME >/dev/null 2>&1; then
             \$latest_version = Find-Module -Name $module | Select-Object -ExpandProperty Version
             \$installed_version = (Get-Module -ListAvailable -Name $module).Version
             if ([version]\$latest_version -gt [version]\$installed_version) {
-                Write-Host \"   [Changed] $module - Latest version: \$latest_version > \$installed_version\"
+                Write-Warning \"Changed $module - Latest version: \$latest_version > \$installed_version\"
                 exit 1
             }
             else {
-                Write-Host \"   [Up-to-date] $module - Installed version: \$installed_version\"
+                Write-Verbose \"[Up-to-date] $module - Installed version: \$installed_version\" -Verbose
             }
         "
         if [ $? -eq 1 ]; then
+            echo -e "\e[31mThe upstream PowerShell modules have changed.\e[0m" >&2
             exit 0
         fi
     done
 else
-    echo "The image $IMAGE_NAME was not found, triggering re-build."
+    echo -e "\e[31mThe image $IMAGE_NAME was not found, triggering re-build.\e[0m" >&2
     exit 0
 fi
 
 echo "The upstream PowerShell modules have not changed."
 
-exit 78
+exit 0
