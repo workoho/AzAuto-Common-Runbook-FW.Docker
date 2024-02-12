@@ -29,7 +29,7 @@ RUN --mount=type=cache,target=/var/lib/apt \
     && curl -sSL ${PS_PACKAGE_URL} -o /tmp/powershell.tar.gz
 
 # Install the tar.gz file in this image and make powershell available
-FROM installer-env AS final-image
+FROM arm64v8/debian:bookworm AS final-image
 
 # Define ENVs for Localization/Globalization
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false \
