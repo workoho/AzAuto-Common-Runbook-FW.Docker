@@ -1,0 +1,98 @@
+name: Build Linux Docker Image
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "Dockerfile.*"
+  repository_dispatch:
+    types: [upstream-changed]
+  workflow_dispatch:
+
+jobs:
+  build_and_push:
+    name: Build and Push on ${{ matrix.platform }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    env:
+      GITHUB_REPO_LOWER: ${{ github.repository }}
+      GITHUB_REPO_OWNER_LOWER: ${{ github.repository_owner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            dockerfile: Dockerfile.linux
+          - platform: linux/arm64
+            dockerfile: Dockerfile.arm64
+          - platform: windows/amd64
+            dockerfile: Dockerfile.windows
+    steps:
+      - name: Display target platform
+        run: echo "Building for target platform ${{ matrix.platform }}"
+
+      - name: Set repo name to lowercase
+        id: repo
+        run: |
+          echo "GITHUB_REPO_LOWER=$(echo ${{ env.GITHUB_REPO_LOWER }} | awk '{print tolower($0)}')" >> $GITHUB_ENV
+          echo "GITHUB_REPO_OWNER_LOWER=$(echo ${{ env.GITHUB_REPO_OWNER_LOWER }} | awk '{print tolower($0)}')" >> $GITHUB_ENV
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Cache Docker layers
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Build Docker image
+        run: ./scripts/build.sh ${{ matrix.dockerfile }} ${{ github.sha }} ${{ env.GITHUB_REPO_LOWER }} ${{ matrix.platform }}
+
+      - name: Test Docker image
+        run: ./scripts/test.sh ${{ github.sha }} ${{ env.GITHUB_REPO_LOWER }} ${{ matrix.platform }}
+
+      - name: Bump version and push tag
+        id: create_tag
+        uses: anothrNick/github-tag-action@1.67.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+          DEFAULT_BUMP: patch
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/${{ env.GITHUB_REPO_LOWER }}
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.x,enable=${{ startsWith(github.ref, 'refs/tags/') }}
+            type=sha
+            type=ref,event=branch
+            type=ref,event=pr
+            type=edge
+
+      - name: Push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./
+          file: ${{ matrix.dockerfile }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          platforms: ${{ matrix.platform }}
