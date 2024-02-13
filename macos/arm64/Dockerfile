@@ -26,7 +26,7 @@ RUN --mount=type=cache,target=/var/lib/apt \
     # required for SSL
         ca-certificates \
     # Download the Linux package and save it
-    && PS_PACKAGE_URL=$(curl -s https://api.github.com/repos/PowerShell/PowerShell/releases/latest | grep 'browser_' | cut -d\" -f4 | grep 'linux-arm64.tar.gz') \
+    && PS_PACKAGE_URL=$(curl -sSL https://api.github.com/repos/PowerShell/PowerShell/releases/latest | grep 'browser_' | cut -d\" -f4 | grep 'linux-arm64.tar.gz') \
     && echo ${PS_PACKAGE_URL} \
     && curl -sSL ${PS_PACKAGE_URL} -o /tmp/powershell.tar.gz
 
