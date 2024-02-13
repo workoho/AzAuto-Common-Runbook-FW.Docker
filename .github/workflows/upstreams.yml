@@ -4,6 +4,10 @@ on:
     - cron: "42 3 * * *" # Run workflow every day at 3:42am UTC
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+    
 jobs:
   check_upstream:
     runs-on: ubuntu-latest
@@ -14,8 +18,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Pull Upstream Docker image
+      - name: Pull Upstream Docker image 1
         run: docker pull mcr.microsoft.com/powershell:latest
+
+      - name: Pull Upstream Docker image 2
+        run: docker pull arm64v8/debian:bookworm
 
       - name: Restore upstream image digest
         uses: actions/cache/restore@v4
@@ -38,7 +45,7 @@ jobs:
         id: check_upstreams
         run: |
           exec 3>&1
-          output=$(./scripts/check-upstreams.sh mcr.microsoft.com/powershell:latest ghcr.io/workoho/azauto-common-runbook-fw:latest 'Az' 'Microsoft.Graph' 'ExchangeOnlineManagement' 'PnP.PowerShell' >&3)
+          output=$(./scripts/check-upstreams.sh mcr.microsoft.com/powershell:latest,arm64v8/debian:bookworm ghcr.io/workoho/azauto-common-runbook-fw:latest 'Az' 'Microsoft.Graph' 'ExchangeOnlineManagement' 'PnP.PowerShell' >&3)
           if [[ -n "$output" ]]; then
             echo "HAS_CHANGES=true" >> $GITHUB_ENV
           else
