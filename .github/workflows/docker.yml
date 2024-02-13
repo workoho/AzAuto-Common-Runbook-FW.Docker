@@ -107,34 +107,16 @@ jobs:
     - name: Create and push manifest
       run: |
         DOCKER_CLI_EXPERIMENTAL=enabled
-        echo "{
-          \"schemaVersion\": 2,
-          \"mediaType\": \"application/vnd.docker.distribution.manifest.list.v2+json\",
-          \"manifests\": [
-            {
-              \"mediaType\": \"application/vnd.docker.distribution.manifest.v2+json\",
-              \"digest\": \"$(docker manifest inspect ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:debian-12 | jq -r '.config.digest')\",
-              \"size\": $(docker manifest inspect ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:debian-12 | jq '[.layers[].size] | add'),
-              \"platform\": {
-                \"architecture\": \"amd64\",
-                \"os\": \"linux\"
-              }
-            },
-            {
-              \"mediaType\": \"application/vnd.docker.distribution.manifest.v2+json\",
-              \"digest\": \"$(docker manifest inspect ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:debian-12-arm64 | jq -r '.config.digest')\",
-              \"size\": $(docker manifest inspect ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:debian-12-arm64 | jq '[.layers[].size] | add'),
-              \"platform\": {
-                \"architecture\": \"arm64\",
-                \"variant\": \"v8\",
-                \"os\": \"linux\"
-              }
-            }
-          ],
-          \"annotations\": {
-            \"org.opencontainers.image.description\": \"This custom Microsoft PowerShell image is provided with pre-installed PowerShell modules that enable faster startup of development containers. It is compatible for x64 and ARM64 architectures, including Apple Silicon Macs.\"
-          }
-        }" | docker run -i ghcr.io/oras-project/oras:main manifest push --username ${{ github.repository_owner }} --password ${{ secrets.GITHUB_TOKEN }} ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:latest -
+        docker manifest create ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:latest \
+          ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:debian-12 \
+          ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:debian-12-arm64
+        manifest=$(docker manifest inspect ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:latest)
+        manifest_with_annotations=$(echo "$manifest" | jq '.annotations = {"org.opencontainers.image.description": "This custom Microsoft PowerShell image is provided with pre-installed PowerShell modules that enable faster startup of development containers. It is compatible for x64 and ARM64 architectures, including Apple Silicon Macs."}')
+        echo "$manifest_with_annotations" | \
+        docker run -i ghcr.io/oras-project/oras:main manifest push \
+          --username ${{ github.repository_owner }} \
+          --password ${{ secrets.GITHUB_TOKEN }} \
+          ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:latest -
 
   trigger:
     name: Trigger GitHub Codespace prebuilds
