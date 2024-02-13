@@ -45,11 +45,14 @@ jobs:
       - name: Check upstreams for changes
         id: check_upstreams
         run: |
-          exec 3>&1
-          output=$(./scripts/check-upstreams.sh mcr.microsoft.com/powershell:latest,arm64v8/debian:bookworm ghcr.io/workoho/azauto-common-runbook-fw:latest 'Az' 'Microsoft.Graph' 'ExchangeOnlineManagement' 'PnP.PowerShell' >&3)
-          if [[ -n "$output" ]]; then
+          echo '' > fd3output.txt
+          exec 3>fd3output.txt
+          ./scripts/check-upstreams.sh mcr.microsoft.com/powershell:latest,arm64v8/debian:bookworm ghcr.io/workoho/azauto-common-runbook-fw:latest 'Az' 'Microsoft.Graph' 'ExchangeOnlineManagement' 'PnP.PowerShell' >&3
+          if [[ -n "$(cat fd3output.txt)" ]]; then
+            echo -e "\e[31mChanges detected in upstreams.\e[0m"
             echo "HAS_CHANGES=true" >> $GITHUB_ENV
           else
+            echo -e "\e[32mNo changes detected in upstreams.\e[0m"
             echo "HAS_CHANGES=false" >> $GITHUB_ENV
           fi
 
