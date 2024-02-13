@@ -94,7 +94,7 @@ jobs:
 
       - name: Create and push manifest
         run: |
-          DOCKER_CLI_EXPERIMENTAL=enabled
+          export DOCKER_CLI_EXPERIMENTAL=enabled
           docker manifest create ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/${{ env.GITHUB_REPO_LOWER }}:latest \
             ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/${{ env.GITHUB_REPO_LOWER }}:debian-12 \
             ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/${{ env.GITHUB_REPO_LOWER }}:debian-12-arm64
