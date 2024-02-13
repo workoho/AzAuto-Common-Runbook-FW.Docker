@@ -18,11 +18,19 @@ Ready-to-use images can be retrieved from the [GitHub Container Registry](https:
 
 ### Included PowerShell modules
 
-- [Azure Az](https://learn.microsoft.com/en-us/powershell/azure/new-azureps-module-az) - Latest Major Version 11.x
-- [Microsoft.Graph](https://learn.microsoft.com/en-us/powershell/microsoftgraph/?view=graph-powershell-1.0) - Latest Major Version 2.x
-- [Microsoft.Graph.Beta](https://learn.microsoft.com/en-us/powershell/microsoftgraph/?view=graph-powershell-beta) - Latest Major Version 2.x
-- [ExchangeOnlineManagement](https://learn.microsoft.com/en-us/powershell/exchange/exchange-online-powershell) - Latest Major Version 3.x
-- [PnP.PowerShell](https://pnp.github.io/powershell/) - Latest Major Version 2.x
+| Module                           | Version Tree |
+| ---------------------------------|:------------:|
+| [Azure Az][1]                    |         11.x |
+| [ExchangeOnlineManagement][2]    |          3.x |
+| [Microsoft.Graph][3]             |          2.x |
+| [Microsoft.Graph.Beta][4]        |          2.x |
+| [PnP.PowerShell][5]              |          2.x |
+
+[1]: https://learn.microsoft.com/en-us/powershell/azure/new-azureps-module-az
+[2]: https://learn.microsoft.com/en-us/powershell/exchange/exchange-online-powershell
+[3]: https://learn.microsoft.com/en-us/powershell/microsoftgraph/?view=graph-powershell-1.0
+[4]: https://learn.microsoft.com/en-us/powershell/microsoftgraph/?view=graph-powershell-beta
+[5]: https://pnp.github.io/powershell/
 
 ## How To Update
 
@@ -32,4 +40,4 @@ The development container is designed so that it can be rebuilt at any time with
 
 
 
-[^1]: Except for ARM64 / Apple Silicon variant. See [macos/arm64/README.md](https://github.com/Workoho/AzAuto-Common-Runbook-FW.Docker/blob/main/macos/arm64/README.md).
+[^1]: Except for ARM64 / Apple Silicon variant. See [linux/arm64/README.md](https://github.com/Workoho/AzAuto-Common-Runbook-FW.Docker/blob/main/linux/arm64/README.md).

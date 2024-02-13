@@ -4,14 +4,6 @@
 
 FROM arm64v8/debian:bookworm AS installer-env
 
-LABEL org.opencontainers.image.title="Azure Automation Common Runbook Framework" \
-      org.opencontainers.image.url="https://github.com/Workoho/AzAuto-Common-Runbook-FW" \
-      org.opencontainers.image.documentation="https://github.com/Workoho/AzAuto-Common-Runbook-FW/wiki" \
-      org.opencontainers.image.authors="Workoho GmbH" \
-      org.opencontainers.image.vendor="Workoho GmbH" \
-      org.opencontainers.image.licenses="MIT" \
-      org.opencontainers.image.description="This custom PowerShell image is provided with pre-installed PowerShell modules that enable faster startup of development containers. It is based on Debian 12 (Bookworm) to run on ARM-based devices, including Apple Silicon Macs, and installs the latest PowerShell version as long as Microsoft does not provide an official ARM64 image."
-
 RUN --mount=type=cache,target=/var/lib/apt \
     --mount=type=cache,target=/var/cache/apt \
     DEBIAN_FRONTEND=noninteractive apt-get update \
@@ -32,6 +24,14 @@ RUN --mount=type=cache,target=/var/lib/apt \
 
 # Install the tar.gz file in this image and make powershell available
 FROM arm64v8/debian:bookworm AS final-image
+
+LABEL org.opencontainers.image.title="Azure Automation Common Runbook Framework" \
+      org.opencontainers.image.url="https://github.com/Workoho/AzAuto-Common-Runbook-FW" \
+      org.opencontainers.image.documentation="https://github.com/Workoho/AzAuto-Common-Runbook-FW/wiki" \
+      org.opencontainers.image.authors="Workoho GmbH" \
+      org.opencontainers.image.vendor="Workoho GmbH" \
+      org.opencontainers.image.licenses="MIT" \
+      org.opencontainers.image.description="This custom PowerShell image is provided with pre-installed PowerShell modules that enable faster startup of development containers. It is based on Debian 12 (Bookworm) to run on ARM-based devices, including Apple Silicon Macs, and installs the latest PowerShell version as long as Microsoft does not provide an official ARM64 image."
 
 ARG MODULES='Az,Microsoft.Graph,Microsoft.Graph.Beta,ExchangeOnlineManagement,PnP.PowerShell'
 ENV MODULES=${MODULES}

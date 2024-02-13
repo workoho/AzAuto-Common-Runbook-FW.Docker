@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Check if the script is running on an Apple Silicon Mac
+# Check if the script is running on an arm64 machine
 if [[ "$(uname -m)" != "arm64" ]]; then
-    echo "This script should only be run on an Apple Silicon Mac."
+    echo "This script should only be run on an arm64 machine."
     exit 1
 fi
 
@@ -13,7 +13,12 @@ pushd "$(dirname "$0")/.." >/dev/null
 trap "{ popd > /dev/null; docker logout ghcr.io; gh auth logout; }" EXIT
 
 # Build the Docker image
-docker build --file ./macos/arm64/Dockerfile -t azauto-common-runbook-fw:debian-12-arm64 ./macos/arm64
+docker build \
+    --file ./linux/arm64/Dockerfile \
+    --label "org.opencontainers.image.created=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" \
+    --label "org.opencontainers.image.source=https://github.com/Workoho/AzAuto-Common-Runbook-FW.Docker/blob/$(git rev-parse HEAD)/linux/arm64/Dockerfile" \
+    -t azauto-common-runbook-fw:debian-12-arm64 \
+    ./linux/arm64
 if [ $? -ne 0 ]; then
     exit 1
 fi
