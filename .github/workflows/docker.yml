@@ -96,7 +96,7 @@ jobs:
         run: |
           DOCKER_CLI_EXPERIMENTAL=enabled
           docker manifest create ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/${{ env.GITHUB_REPO_LOWER }}:latest \
-            ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/${{ env.GITHUB_REPO_LOWER }}debian-12 \
+            ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/${{ env.GITHUB_REPO_LOWER }}:debian-12 \
             ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/${{ env.GITHUB_REPO_LOWER }}:debian-12-arm64
           manifest=$(docker manifest inspect ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/${{ env.GITHUB_REPO_LOWER }}:latest)
           title="Azure Automation Common Runbook Framework"
