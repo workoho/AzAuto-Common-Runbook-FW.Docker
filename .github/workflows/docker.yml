@@ -28,7 +28,7 @@ jobs:
       - name: Set repo name to lowercase
         id: repo
         run: |
-          echo "GITHUB_REPO_LOWER=$(echo ${{ env.GITHUB_REPO_LOWER }} | awk '{print tolower($0)}' | sed 's/\.Docker$//')" >> $GITHUB_ENV
+          echo "GITHUB_REPO_LOWER=$(echo ${{ env.GITHUB_REPO_LOWER }} | awk '{print tolower($0)}' | sed 's/\.docker$//I')" >> $GITHUB_ENV
           echo "GITHUB_REPO_OWNER_LOWER=$(echo ${{ env.GITHUB_REPO_OWNER_LOWER }} | awk '{print tolower($0)}')" >> $GITHUB_ENV
 
       - name: Checkout code
@@ -82,7 +82,7 @@ jobs:
       - name: Set repo name to lowercase
         id: repo
         run: |
-          echo "GITHUB_REPO_LOWER=$(echo ${{ env.GITHUB_REPO_LOWER }} | awk '{print tolower($0)}' | sed 's/\.Docker$//')" >> $GITHUB_ENV
+          echo "GITHUB_REPO_LOWER=$(echo ${{ env.GITHUB_REPO_LOWER }} | awk '{print tolower($0)}' | sed 's/\.docker$//I')" >> $GITHUB_ENV
           echo "GITHUB_REPO_OWNER_LOWER=$(echo ${{ env.GITHUB_REPO_OWNER_LOWER }} | awk '{print tolower($0)}')" >> $GITHUB_ENV
 
       - name: Login to GitHub Container Registry
@@ -92,7 +92,15 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Get current date
+        id: date
+        run: echo "DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
+
       - name: Create and push manifest
+        env:
+          GITHUB_REPO_LOWER: ${{ env.GITHUB_REPO_LOWER }}
+          GITHUB_REPO_OWNER_LOWER: ${{ env.GITHUB_REPO_OWNER_LOWER }}
+          DATE: ${{ env.DATE }}
         run: |
           export DOCKER_CLI_EXPERIMENTAL=enabled
           docker manifest create ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/${{ env.GITHUB_REPO_LOWER }}:latest \
