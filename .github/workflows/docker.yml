@@ -96,7 +96,7 @@ jobs:
       - merge
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      actions: write
     strategy:
       matrix:
         repo: ['Workoho/AzAuto-Common-Runbook-FW', 'Workoho/AzAuto-Project.tmpl', 'Workoho/Entra-Tiering-Security-Model']
