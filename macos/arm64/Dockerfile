@@ -116,9 +116,6 @@ RUN --mount=from=installer-env,target=/mnt/pwsh,source=/tmp \
             } \
           }"
 
-LABEL description="# Welcome to Azure Automation Common Runbook Framework \
-To start learning about the framework checkout the [project page](https://github.com/Workoho/AzAuto-Common-Runbook-FW)"
-
 # Use PowerShell as the default shell
 # Use array to avoid Docker prepending /bin/sh -c
 CMD [ "pwsh" ]
