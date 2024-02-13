@@ -25,40 +25,40 @@ jobs:
       GITHUB_REPO_OWNER_LOWER: ${{ github.repository_owner }}
 
     steps:
-    - name: Set repo name to lowercase
-      id: repo
-      run: |
-        echo "GITHUB_REPO_LOWER=$(echo ${{ env.GITHUB_REPO_LOWER }} | awk '{print tolower($0)}')" >> $GITHUB_ENV
-        echo "GITHUB_REPO_OWNER_LOWER=$(echo ${{ env.GITHUB_REPO_OWNER_LOWER }} | awk '{print tolower($0)}')" >> $GITHUB_ENV
+      - name: Set repo name to lowercase
+        id: repo
+        run: |
+          echo "GITHUB_REPO_LOWER=$(echo ${{ env.GITHUB_REPO_LOWER }} | awk '{print tolower($0)}' | sed 's/\.Docker$//')" >> $GITHUB_ENV
+          echo "GITHUB_REPO_OWNER_LOWER=$(echo ${{ env.GITHUB_REPO_OWNER_LOWER }} | awk '{print tolower($0)}')" >> $GITHUB_ENV
 
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    # - name: Set up QEMU
-    #   uses: docker/setup-qemu-action@v3
+      # - name: Set up QEMU
+      #   uses: docker/setup-qemu-action@v3
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{ github.repository_owner }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Get current date
-      id: date
-      run: echo "DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
+      - name: Get current date
+        id: date
+        run: echo "DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
 
-    - name: Build and push
-      uses: docker/build-push-action@v5
-      env:
-        DATE: ${{ env.DATE }}
-      with:
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        env:
+          DATE: ${{ env.DATE }}
+        with:
           context: .
           push: true
-          tags: ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:debian-12
+          tags: ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/${{ env.GITHUB_REPO_LOWER }}:debian-12
           file: ./linux/amd64/Dockerfile
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -70,7 +70,7 @@ jobs:
   merge:
     name: Update :latest manifest
     needs:
-        - build
+      - build
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -79,44 +79,44 @@ jobs:
       GITHUB_REPO_OWNER_LOWER: ${{ github.repository_owner }}
 
     steps:
-    - name: Set repo name to lowercase
-      id: repo
-      run: |
-        echo "GITHUB_REPO_LOWER=$(echo ${{ env.GITHUB_REPO_LOWER }} | awk '{print tolower($0)}')" >> $GITHUB_ENV
-        echo "GITHUB_REPO_OWNER_LOWER=$(echo ${{ env.GITHUB_REPO_OWNER_LOWER }} | awk '{print tolower($0)}')" >> $GITHUB_ENV
+      - name: Set repo name to lowercase
+        id: repo
+        run: |
+          echo "GITHUB_REPO_LOWER=$(echo ${{ env.GITHUB_REPO_LOWER }} | awk '{print tolower($0)}' | sed 's/\.Docker$//')" >> $GITHUB_ENV
+          echo "GITHUB_REPO_OWNER_LOWER=$(echo ${{ env.GITHUB_REPO_OWNER_LOWER }} | awk '{print tolower($0)}')" >> $GITHUB_ENV
 
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{ github.repository_owner }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-  
-    - name: Install ORAS
-      run: |
-        version=$(curl -sSL "https://api.github.com/repos/oras-project/oras/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
-        curl -L -o oras.tar.gz "https://github.com/oras-project/oras/releases/download/$version/oras_${version:1}_linux_amd64.tar.gz"
-        tar zxf oras.tar.gz -C /usr/local/bin
-        rm oras.tar.gz
-
-    - name: Pull images
-      run: |
-        docker pull ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:debian-12
-        docker pull ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:debian-12-arm64
-
-    - name: Create and push manifest
-      run: |
-        DOCKER_CLI_EXPERIMENTAL=enabled
-        docker manifest create ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:latest \
-          ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:debian-12 \
-          ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:debian-12-arm64
-        manifest=$(docker manifest inspect ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:latest)
-        manifest_with_annotations=$(echo "$manifest" | jq '.annotations = {"org.opencontainers.image.description": "This custom Microsoft PowerShell image is provided with pre-installed PowerShell modules that enable faster startup of development containers. It is compatible for x64 and ARM64 architectures, including Apple Silicon Macs."}')
-        echo "$manifest_with_annotations" | \
-        docker run -i ghcr.io/oras-project/oras:main manifest push \
-          --username ${{ github.repository_owner }} \
-          --password ${{ secrets.GITHUB_TOKEN }} \
-          ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:latest -
+      - name: Create and push manifest
+        run: |
+          DOCKER_CLI_EXPERIMENTAL=enabled
+          docker manifest create ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/${{ env.GITHUB_REPO_LOWER }}:latest \
+            ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/${{ env.GITHUB_REPO_LOWER }}debian-12 \
+            ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/${{ env.GITHUB_REPO_LOWER }}:debian-12-arm64
+          manifest=$(docker manifest inspect ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/${{ env.GITHUB_REPO_LOWER }}:latest)
+          title="Azure Automation Common Runbook Framework"
+          url="https://github.com/Workoho/AzAuto-Common-Runbook-FW"
+          documentation="https://github.com/Workoho/AzAuto-Common-Runbook-FW/wiki"
+          authors="Workoho GmbH"
+          vendor="Workoho GmbH"
+          licenses="MIT"
+          description="This custom Microsoft PowerShell image is provided with pre-installed PowerShell modules that enable faster startup of development containers. It is compatible for x64 and ARM64 architectures, including Apple Silicon Macs."
+          created="${{ env.DATE }}"
+          source="https://github.com/Workoho/AzAuto-Common-Runbook-FW.Docker/blob/${{ github.sha }}/linux/amd64/Dockerfile"
+          annotations=".annotations = {
+            \"org.opencontainers.image.title\": \"$title\",
+            \"org.opencontainers.image.url\": \"$url\",
+            \"org.opencontainers.image.documentation\": \"$documentation\",
+            \"org.opencontainers.image.authors\": \"$authors\",
+            \"org.opencontainers.image.vendor\": \"$vendor\",
+            \"org.opencontainers.image.licenses\": \"$licenses\"
+            \"org.opencontainers.image.description\": \"$description\",
+            \"org.opencontainers.image.created\": \"$created\",
+            \"org.opencontainers.image.source\": \"$source\",
+          }"
+          echo "$manifest" | jq "$annotations" | \
+          docker run -i ghcr.io/oras-project/oras:main manifest push \
+            --username ${{ github.repository_owner }} \
+            --password ${{ secrets.GITHUB_TOKEN }} \
+            ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/${{ env.GITHUB_REPO_LOWER }}:latest -
 
   trigger:
     name: Trigger GitHub Codespace prebuilds
@@ -125,7 +125,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        repo: ['Workoho/AzAuto-Common-Runbook-FW', 'Workoho/AzAuto-Project.tmpl', 'Workoho/Entra-Tiering-Security-Model']
+        repo:
+          [
+            "Workoho/AzAuto-Common-Runbook-FW",
+            "Workoho/AzAuto-Project.tmpl",
+            "Workoho/Entra-Tiering-Security-Model",
+          ]
     steps:
       - name: Trigger prebuild
         uses: peter-evans/repository-dispatch@v3
