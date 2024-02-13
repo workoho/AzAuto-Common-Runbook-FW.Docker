@@ -94,10 +94,11 @@ jobs:
   
     - name: Install ORAS
       run: |
-        version=$(curl -sSL "https://api.github.com/repos/deislabs/oras/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
-        curl -L -o oras.tar.gz "https://github.com/deislabs/oras/releases/download/$version/oras_${version:1}_linux_amd64.tar.gz"
+        version=$(curl -sSL "https://api.github.com/repos/oras-project/oras/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+        curl -L -o oras.tar.gz "https://github.com/oras-project/oras/releases/download/$version/oras_${version:1}_linux_amd64.tar.gz"
         tar zxf oras.tar.gz -C /usr/local/bin
         rm oras.tar.gz
+
     - name: Pull images
       run: |
         docker pull ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:debian-12
@@ -133,13 +134,7 @@ jobs:
           \"annotations\": {
             \"org.opencontainers.image.description\": \"This custom Microsoft PowerShell image is provided with pre-installed PowerShell modules that enable a faster start of development containers. It is compatible for x64 and ARM64 architectures.\"
           }
-        }" > manifest.json
-
-        oras push ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:latest \
-          --manifest-config /dev/null:application/vnd.unknown.config \
-          --username ${{ github.repository_owner }} \
-          --password ${{ secrets.GITHUB_TOKEN }} \
-          manifest.json:application/vnd.oci.image.index.v1+json
+        }" | docker run -i ghcr.io/oras-project/oras:main manifest push --username ${{ github.repository_owner }} -password ${{ secrets.GITHUB_TOKEN }} ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:latest -
 
   trigger:
     name: Trigger GitHub Codespace prebuilds
