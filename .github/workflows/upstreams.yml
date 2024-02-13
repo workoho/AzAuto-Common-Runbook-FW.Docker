@@ -10,6 +10,7 @@ concurrency:
     
 jobs:
   check_upstream:
+    name: Check Upstream
     runs-on: ubuntu-latest
     permissions:
       contents: write
