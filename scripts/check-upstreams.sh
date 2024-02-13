@@ -4,31 +4,39 @@
 # CHECK THE UPSTREAM IMAGE     #
 ################################
 
-# Define the image name
-IMAGE_NAME="$1"
-
-# Get the latest image digest
-LATEST_DIGEST=$(docker inspect --format='{{.RepoDigests}}' $IMAGE_NAME)
-
 # Read the previous image digest from a file
 if [ -f "upstream-image-digest.txt" ]; then
     PREVIOUS_DIGEST=$(cat upstream-image-digest.txt)
+    echo '' >upstream-image-digest.txt
 else
     PREVIOUS_DIGEST=""
 fi
 
-# Compare the digests
-if [ "$LATEST_DIGEST" != "$PREVIOUS_DIGEST" ]; then
-    echo -e "\e[31mThe upstream image has changed.\e[0m" >&3
+IFS=',' read -ra IMAGES <<<"$1"
+for image in "${IMAGES[@]}"; do
+    # Get the latest image digest
+    LATEST_DIGEST=$(docker inspect --format='{{.RepoDigests}}' $image)
+
+    # Compare the digests
+    CHANGED=false
+    while IFS= read -r line; do
+        if [ "$LATEST_DIGEST" != "$line" ]; then
+            CHANGED=true
+            break
+        fi
+    done <<<"$PREVIOUS_DIGEST"
 
     # Save the latest digest to a file for future comparisons
-    echo $LATEST_DIGEST >upstream-image-digest.txt
+    echo $LATEST_DIGEST >>upstream-image-digest.txt
 
-    # Exit with a 0 status to indicate that the image has changed and the workflow may continue
-    exit 0
-else
-    echo -e "\e[32mThe upstream image has not changed.\e[0m"
-fi
+    if $CHANGED; then
+        # Write to file descriptor 3, which is the file descriptor for the GitHub Actions runner to detect changes
+        echo -e "\e[31mThe upstream image $image has changed.\e[0m" >&3
+        exit 0
+    else
+        echo -e "\e[32mThe upstream image $image has not changed.\e[0m"
+    fi
+done
 
 ################################
 # CHECK THE POWERSHELL MODULES #
@@ -55,6 +63,7 @@ if docker image inspect $IMAGE_NAME >/dev/null 2>&1; then
             }
         "
         if [ $? -eq 1 ]; then
+            # Write to file descriptor 3, which is the file descriptor for the GitHub Actions runner to detect changes
             echo -e "\e[31mThe upstream PowerShell modules have changed.\e[0m" >&3
             exit 0
         fi
