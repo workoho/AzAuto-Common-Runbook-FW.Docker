@@ -6,7 +6,7 @@ LABEL org.opencontainers.image.title="Azure Automation Common Runbook Framework"
       org.opencontainers.image.authors="Workoho GmbH" \
       org.opencontainers.image.vendor="Workoho GmbH" \
       org.opencontainers.image.licenses="MIT" \
-      org.opencontainers.image.description="This custom PowerShell image is provided with pre-installed PowerShell modules that enable faster startup of development containers. It is based on the latest official PowerShell image from Microsoft."
+      org.opencontainers.image.description="This custom PowerShell image is provided with pre-installed PowerShell modules that enable faster startup of development containers. It is based on the latest official PowerShell image from Microsoft, which in turn is based on Debian 12 (Bookworm)."
 
 ARG MODULES='Az,Microsoft.Graph,Microsoft.Graph.Beta,ExchangeOnlineManagement,PnP.PowerShell'
 ENV MODULES=${MODULES}

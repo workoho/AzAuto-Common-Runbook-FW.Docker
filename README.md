@@ -1,5 +1,9 @@
 # Development Container for Azure Automation Common Runbook Framework
 
+[![View in GitHub Container Registry](https://img.shields.io/badge/View%20in-GitHub%20Container%20Registry-blue?logo=github)](https://github.com/workoho/AzAuto-Common-Runbook-FW.Docker/pkgs/container/azauto-common-runbook-fw)
+[![Build Docker Image](https://github.com/Workoho/AzAuto-Common-Runbook-FW.Docker/actions/workflows/docker.yml/badge.svg)](https://github.com/Workoho/AzAuto-Common-Runbook-FW.Docker/actions/workflows/docker.yml)
+[![Check Upstream](https://github.com/Workoho/AzAuto-Common-Runbook-FW.Docker/actions/workflows/upstreams.yml/badge.svg)](https://github.com/Workoho/AzAuto-Common-Runbook-FW.Docker/actions/workflows/upstreams.yml)
+
 This repository contains the build data for the custom Microsoft PowerShell image provided by the [Azure Automation Common Runbook Framework](https://github.com/Workoho/AzAuto-Common-Runbook-FW) for Azure Automation runbook development.
 
 It is provided with pre-installed PowerShell modules that enable faster startup of development containers. The image is compatible for x64 and ARM64 architectures, including Apple Silicon Macs.
@@ -22,6 +26,10 @@ Ready-to-use images can be retrieved from the [GitHub Container Registry](https:
 
 ## How To Update
 
-Every night the image is updated to ensure that it is always up to date with the latest production versions of the Microsoft/Debian base image as well as the included PowerShell modules.
+Every night[^1] the image is updated to ensure that it is always up to date with the latest production versions of the Microsoft/Debian base image as well as the included PowerShell modules.
 
 The development container is designed so that it can be rebuilt at any time without losing your data. To update to the latest versions, you can simply trigger a rebuild, e.g. by rebuilding your GitHub Codespace or your local development container.
+
+
+
+[^1]: Except for ARM64 / Apple Silicon variant. See [macos/arm64/README.md](https://github.com/Workoho/AzAuto-Common-Runbook-FW.Docker/blob/main/macos/arm64/README.md).
