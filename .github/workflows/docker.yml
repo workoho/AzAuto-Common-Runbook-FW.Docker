@@ -96,6 +96,7 @@ jobs:
       - merge
     runs-on: ubuntu-latest
     permissions:
+      contents: write
       actions: write
     strategy:
       matrix:
