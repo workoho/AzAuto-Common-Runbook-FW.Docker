@@ -2,6 +2,8 @@
 # Copyright (c) Microsoft Corporation & Workoho GmbH
 # Licensed under the MIT License.
 
+FROM arm64v8/debian:bookworm AS installer-env
+
 LABEL org.opencontainers.image.title="Azure Automation Common Runbook Framework" \
       org.opencontainers.image.url="https://github.com/Workoho/AzAuto-Common-Runbook-FW" \
       org.opencontainers.image.documentation="https://github.com/Workoho/AzAuto-Common-Runbook-FW/wiki" \
@@ -9,8 +11,6 @@ LABEL org.opencontainers.image.title="Azure Automation Common Runbook Framework"
       org.opencontainers.image.vendor="Workoho GmbH" \
       org.opencontainers.image.licenses="MIT" \
       org.opencontainers.image.description="This custom Microsoft PowerShell image is provided with pre-installed PowerShell modules that enable a faster start of development containers."
-
-FROM arm64v8/debian:bookworm AS installer-env
 
 RUN --mount=type=cache,target=/var/lib/apt \
     --mount=type=cache,target=/var/cache/apt \
