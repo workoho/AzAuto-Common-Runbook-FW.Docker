@@ -15,8 +15,6 @@ fi
 CHANGED=false
 IFS=',' read -ra IMAGES <<<"$1"
 for image in "${IMAGES[@]}"; do
-    echo "Checking the upstream image $image"
-
     # Get the latest image digest
     LATEST_DIGEST=$(docker inspect --format='{{.RepoDigests}}' $image)
 
@@ -24,17 +22,16 @@ for image in "${IMAGES[@]}"; do
     PREVIOUS_DIGEST=$(echo "$PREVIOUS_DIGESTS" | grep "^$image " | cut -d' ' -f2- || echo "")
     if [ "$LATEST_DIGEST" != "$PREVIOUS_DIGEST" ]; then
         CHANGED=true
+        echo -e "\e[31mThe upstream image $image has changed.\e[0m" >&3
+    else
+        echo -e "\e[32mThe upstream image $image has not changed.\e[0m"
     fi
 
     # Save the latest digest to a file for future comparisons
     echo "$image $LATEST_DIGEST" >>upstream-image-digest.txt
 done
 if $CHANGED; then
-    # Write to file descriptor 3, which is the file descriptor for the GitHub Actions runner to detect changes
-    echo -e "\e[31mThe upstream images have changed.\e[0m" >&3
     exit 0
-else
-    echo -e "\e[32mThe upstream images have not changed.\e[0m"
 fi
 
 ################################
