@@ -89,3 +89,21 @@ jobs:
           ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:debian-12 \
           ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:debian-12-arm64
         docker manifest push --purge ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:latest
+
+  trigger:
+    name: Trigger GitHub Codespace prebuilds
+    needs:
+      - merge
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    strategy:
+      matrix:
+        repo: ['Workoho/AzAuto-Common-Runbook-FW', 'Workoho/AzAuto-Project.tmpl', 'Workoho/Entra-Tiering-Security-Model']
+    steps:
+      - name: Trigger prebuild
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ matrix.repo }}
+          event-type: prebuild
