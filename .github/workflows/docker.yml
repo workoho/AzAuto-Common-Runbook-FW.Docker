@@ -109,10 +109,10 @@ jobs:
         DOCKER_CLI_EXPERIMENTAL=enabled
         echo "{
           \"schemaVersion\": 2,
-          \"mediaType\": \"application/vnd.oci.image.index.v1+json\",
+          \"mediaType\": \"application/vnd.oci.image.index.v2+json\",
           \"manifests\": [
             {
-              \"mediaType\": \"application/vnd.oci.image.manifest.v1+json\",
+              \"mediaType\": \"application/vnd.oci.image.manifest.v2+json\",
               \"digest\": \"$(docker manifest inspect ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:debian-12 | jq -r '.config.digest')\",
               \"size\": $(docker manifest inspect ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:debian-12 | jq '[.layers[].size] | add'),
               \"platform\": {
@@ -121,7 +121,7 @@ jobs:
               }
             },
             {
-              \"mediaType\": \"application/vnd.oci.image.manifest.v1+json\",
+              \"mediaType\": \"application/vnd.oci.image.manifest.v2+json\",
               \"digest\": \"$(docker manifest inspect ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:debian-12-arm64 | jq -r '.config.digest')\",
               \"size\": $(docker manifest inspect ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:debian-12-arm64 | jq '[.layers[].size] | add'),
               \"platform\": {

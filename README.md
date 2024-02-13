@@ -18,7 +18,7 @@ Ready-to-use images can be retrieved from the [GitHub Container Registry](https:
 
 ### Included PowerShell modules
 
-- [Az](https://learn.microsoft.com/en-us/powershell/azure/new-azureps-module-az) - Latest Major Version 11.x
+- [Azure Az](https://learn.microsoft.com/en-us/powershell/azure/new-azureps-module-az) - Latest Major Version 11.x
 - [Microsoft.Graph](https://learn.microsoft.com/en-us/powershell/microsoftgraph/?view=graph-powershell-1.0) - Latest Major Version 2.x
 - [Microsoft.Graph.Beta](https://learn.microsoft.com/en-us/powershell/microsoftgraph/?view=graph-powershell-beta) - Latest Major Version 2.x
 - [ExchangeOnlineManagement](https://learn.microsoft.com/en-us/powershell/exchange/exchange-online-powershell) - Latest Major Version 3.x
