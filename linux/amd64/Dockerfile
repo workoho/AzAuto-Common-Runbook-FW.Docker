@@ -6,7 +6,7 @@ LABEL org.opencontainers.image.title="Azure Automation Common Runbook Framework"
       org.opencontainers.image.authors="Workoho GmbH" \
       org.opencontainers.image.vendor="Workoho GmbH" \
       org.opencontainers.image.licenses="MIT" \
-      org.opencontainers.image.description="This custom Microsoft PowerShell image is provided with pre-installed PowerShell modules that enable a faster start of development containers."
+      org.opencontainers.image.description="This custom PowerShell image is provided with pre-installed PowerShell modules that enable faster startup of development containers. It is based on the latest official PowerShell image from Microsoft."
 
 ARG MODULES='Az,Microsoft.Graph,Microsoft.Graph.Beta,ExchangeOnlineManagement,PnP.PowerShell'
 ENV MODULES=${MODULES}

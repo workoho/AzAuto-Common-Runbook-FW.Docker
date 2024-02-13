@@ -132,7 +132,7 @@ jobs:
             }
           ],
           \"annotations\": {
-            \"org.opencontainers.image.description\": \"This custom Microsoft PowerShell image is provided with pre-installed PowerShell modules that enable a faster start of development containers. It is compatible for x64 and ARM64 architectures.\"
+            \"org.opencontainers.image.description\": \"This custom Microsoft PowerShell image is provided with pre-installed PowerShell modules that enable faster startup of development containers. It is compatible for x64 and ARM64 architectures, including Apple Silicon Macs.\"
           }
         }" | docker run -i ghcr.io/oras-project/oras:main manifest push --username ${{ github.repository_owner }} --password ${{ secrets.GITHUB_TOKEN }} ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:latest -
 

@@ -10,7 +10,7 @@ LABEL org.opencontainers.image.title="Azure Automation Common Runbook Framework"
       org.opencontainers.image.authors="Workoho GmbH" \
       org.opencontainers.image.vendor="Workoho GmbH" \
       org.opencontainers.image.licenses="MIT" \
-      org.opencontainers.image.description="This custom Microsoft PowerShell image is provided with pre-installed PowerShell modules that enable a faster start of development containers."
+      org.opencontainers.image.description="This custom PowerShell image is provided with pre-installed PowerShell modules that enable faster startup of development containers. It is based on Debian 12 (Bookworm) to run on ARM-based devices, including Apple Silicon Macs, and installs the latest PowerShell version as long as Microsoft does not provide an official ARM64 image."
 
 RUN --mount=type=cache,target=/var/lib/apt \
     --mount=type=cache,target=/var/cache/apt \
