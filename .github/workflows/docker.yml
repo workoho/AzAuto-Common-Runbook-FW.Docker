@@ -110,7 +110,7 @@ jobs:
           licenses="MIT"
           description="This custom Microsoft PowerShell image is provided with pre-installed PowerShell modules that enable faster startup of development containers. It is compatible for x64 and ARM64 architectures, including Apple Silicon Macs."
           created="${{ env.DATE }}"
-          source="https://github.com/Workoho/AzAuto-Common-Runbook-FW.Docker/blob/${{ github.sha }}/linux/amd64/Dockerfile"
+          source="https://github.com/Workoho/AzAuto-Common-Runbook-FW.Docker/tree/${{ github.sha }}"
           annotations=".annotations = {
             \"org.opencontainers.image.title\": \"$title\",
             \"org.opencontainers.image.url\": \"$url\",
