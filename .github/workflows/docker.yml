@@ -47,8 +47,25 @@ jobs:
         username: ${{ github.repository_owner }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
+    - name: Get current date
+      id: date
+      run: echo "DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
+
+    - name: Pull base image
+      run: docker pull mcr.microsoft.com/powershell:debian-12
+
+    - name: Get labels from base image
+      id: base_image
+      run: |
+        echo "UPSTREAM_VERSION=$(docker inspect --format '{{ index .Config.Labels "org.opencontainers.image.version"}}' mcr.microsoft.com/powershell:debian-12)" >> $GITHUB_ENV
+        echo "UPSTREAM_REVISION=$(docker inspect --format '{{ index .Config.Labels "org.opencontainers.image.revision"}}' mcr.microsoft.com/powershell:debian-12)" >> $GITHUB_ENV
+
     - name: Build and push
       uses: docker/build-push-action@v5
+      env:
+        DATE: ${{ env.DATE }}
+        UPSTREAM_VERSION: ${{ env.UPSTREAM_VERSION }}
+        UPSTREAM_REVISION: ${{ env.UPSTREAM_REVISION }}
       with:
           context: .
           push: true
@@ -57,6 +74,11 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           provenance: false
+          labels: |
+            org.opencontainers.image.created=${{ env.DATE }}
+            org.opencontainers.image.source="https://github.com/Workoho/AzAuto-Common-Runbook-FW.Docker/blob/${{ github.sha }}/linux/amd64/Dockerfile"
+            org.opencontainers.image.version=${{ env.UPSTREAM_VERSION }}
+            org.opencontainers.image.revision=${{ env.UPSTREAM_REVISION }}
 
   merge:
     name: Update :latest manifest

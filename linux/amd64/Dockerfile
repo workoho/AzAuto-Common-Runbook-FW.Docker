@@ -1,3 +1,11 @@
+LABEL org.opencontainers.image.title="Azure Automation Common Runbook Framework" \
+      org.opencontainers.image.url="https://github.com/Workoho/AzAuto-Common-Runbook-FW" \
+      org.opencontainers.image.documentation="https://github.com/Workoho/AzAuto-Common-Runbook-FW/wiki" \
+      org.opencontainers.image.authors="Workoho GmbH" \
+      org.opencontainers.image.vendor="Workoho GmbH" \
+      org.opencontainers.image.licenses="MIT" \
+      org.opencontainers.image.description="This custom Microsoft PowerShell image is provided with pre-installed PowerShell modules that enable a faster start of development containers."
+
 FROM mcr.microsoft.com/powershell:debian-12
 
 ARG MODULES='Az,Microsoft.Graph,Microsoft.Graph.Beta,ExchangeOnlineManagement,PnP.PowerShell'
@@ -35,6 +43,3 @@ RUN export POWERSHELL_TELEMETRY_OPTOUT=1 \
         exit 1 ; \
       } \
     }"
-
-LABEL description="# Welcome to Azure Automation Common Runbook Framework \
-To start learning about the framework checkout the [project page](https://github.com/Workoho/AzAuto-Common-Runbook-FW)"
