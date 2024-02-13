@@ -7,7 +7,7 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
-    
+
 jobs:
   check_upstream:
     name: Check Upstream
@@ -38,7 +38,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-  
+
       - name: Pull Our Docker image
         run: docker pull ghcr.io/workoho/azauto-common-runbook-fw:latest
 
@@ -46,8 +46,8 @@ jobs:
         id: check_upstreams
         run: |
           echo '' > fd3output.txt
-          exec 3>fd3output.txt
-          ./scripts/check-upstreams.sh mcr.microsoft.com/powershell:latest,arm64v8/debian:bookworm ghcr.io/workoho/azauto-common-runbook-fw:latest 'Az' 'Microsoft.Graph' 'ExchangeOnlineManagement' 'PnP.PowerShell' >&3
+          exec 3> >(tee fd3output.txt)
+          ./scripts/check-upstreams.sh mcr.microsoft.com/powershell:latest,arm64v8/debian:bookworm ghcr.io/workoho/azauto-common-runbook-fw:latest 'Az' 'Microsoft.Graph' 'ExchangeOnlineManagement' 'PnP.PowerShell' >&3 2>&1
           if [[ -n "$(cat fd3output.txt)" ]]; then
             echo -e "\e[31mChanges detected in upstreams.\e[0m"
             echo "HAS_CHANGES=true" >> $GITHUB_ENV
