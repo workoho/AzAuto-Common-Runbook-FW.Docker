@@ -117,10 +117,10 @@ jobs:
             \"org.opencontainers.image.documentation\": \"$documentation\",
             \"org.opencontainers.image.authors\": \"$authors\",
             \"org.opencontainers.image.vendor\": \"$vendor\",
-            \"org.opencontainers.image.licenses\": \"$licenses\"
+            \"org.opencontainers.image.licenses\": \"$licenses\",
             \"org.opencontainers.image.description\": \"$description\",
             \"org.opencontainers.image.created\": \"$created\",
-            \"org.opencontainers.image.source\": \"$source\",
+            \"org.opencontainers.image.source\": \"$source\"
           }"
           echo "$manifest" | jq "$annotations" | \
           docker run -i ghcr.io/oras-project/oras:main manifest push \
