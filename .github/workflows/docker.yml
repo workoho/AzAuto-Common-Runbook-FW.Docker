@@ -92,12 +92,54 @@ jobs:
         username: ${{ github.repository_owner }}
         password: ${{ secrets.GITHUB_TOKEN }}
   
+    - name: Install ORAS
+      run: |
+        version=$(curl -sSL "https://api.github.com/repos/deislabs/oras/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+        curl -L -o oras.tar.gz "https://github.com/deislabs/oras/releases/download/$version/oras_${version:1}_linux_amd64.tar.gz"
+        tar zxf oras.tar.gz -C /usr/local/bin
+        rm oras.tar.gz
+    - name: Pull images
+      run: |
+        docker pull ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:debian-12
+        docker pull ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:debian-12-arm64
+
     - name: Create and push manifest
       run: |
-        docker manifest create --amend ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:latest \
-          ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:debian-12 \
-          ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:debian-12-arm64
-        docker manifest push --purge ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:latest
+        DOCKER_CLI_EXPERIMENTAL=enabled
+        echo "{
+          \"schemaVersion\": 2,
+          \"mediaType\": \"application/vnd.oci.image.index.v1+json\",
+          \"manifests\": [
+            {
+              \"mediaType\": \"application/vnd.oci.image.manifest.v1+json\",
+              \"digest\": \"$(docker manifest inspect ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:debian-12 | jq -r '.config.digest')\",
+              \"size\": $(docker manifest inspect ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:debian-12 | jq '[.layers[].size] | add'),
+              \"platform\": {
+                \"architecture\": \"amd64\",
+                \"os\": \"linux\"
+              }
+            },
+            {
+              \"mediaType\": \"application/vnd.oci.image.manifest.v1+json\",
+              \"digest\": \"$(docker manifest inspect ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:debian-12-arm64 | jq -r '.config.digest')\",
+              \"size\": $(docker manifest inspect ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:debian-12-arm64 | jq '[.layers[].size] | add'),
+              \"platform\": {
+                \"architecture\": \"arm64\",
+                \"variant\": \"v8\",
+                \"os\": \"linux\"
+              }
+            }
+          ],
+          \"annotations\": {
+            \"org.opencontainers.image.description\": \"This custom Microsoft PowerShell image is provided with pre-installed PowerShell modules that enable a faster start of development containers. It is compatible for x64 and ARM64 architectures.\"
+          }
+        }" > manifest.json
+
+        oras push ghcr.io/${{ env.GITHUB_REPO_OWNER_LOWER }}/azauto-common-runbook-fw:latest \
+          --manifest-config /dev/null:application/vnd.unknown.config \
+          --username ${{ github.repository_owner }} \
+          --password ${{ secrets.GITHUB_TOKEN }} \
+          manifest.json:application/vnd.oci.image.index.v1+json
 
   trigger:
     name: Trigger GitHub Codespace prebuilds
