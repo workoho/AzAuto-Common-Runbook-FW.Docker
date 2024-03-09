@@ -24,13 +24,15 @@ Ready-to-use images can be retrieved from the [GitHub Container Registry](https:
 | [ExchangeOnlineManagement][2]    |          3.x |
 | [Microsoft.Graph][3]             |          2.x |
 | [Microsoft.Graph.Beta][4]        |          2.x |
-| [PnP.PowerShell][5]              |          2.x |
+| [MicrosoftTeams][5]              |          6.x |
+| [PnP.PowerShell][6]              |          2.x |
 
 [1]: https://learn.microsoft.com/en-us/powershell/azure/new-azureps-module-az
 [2]: https://learn.microsoft.com/en-us/powershell/exchange/exchange-online-powershell
 [3]: https://learn.microsoft.com/en-us/powershell/microsoftgraph/?view=graph-powershell-1.0
 [4]: https://learn.microsoft.com/en-us/powershell/microsoftgraph/?view=graph-powershell-beta
-[5]: https://pnp.github.io/powershell/
+[5]: https://learn.microsoft.com/en-us/microsoftteams/teams-powershell-overview
+[6]: https://pnp.github.io/powershell/
 
 ## How To Update
 

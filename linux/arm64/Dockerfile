@@ -33,10 +33,10 @@ LABEL org.opencontainers.image.title="Azure Automation Common Runbook Framework"
       org.opencontainers.image.licenses="MIT" \
       org.opencontainers.image.description="This custom PowerShell image is provided with pre-installed PowerShell modules that enable faster startup of development containers. It is based on Debian 12 (Bookworm) to run on ARM-based devices, including Apple Silicon Macs, and installs the latest PowerShell version as long as Microsoft does not provide an official ARM64 image."
 
-ARG MODULES='Az,Microsoft.Graph,Microsoft.Graph.Beta,ExchangeOnlineManagement,PnP.PowerShell'
+ARG MODULES='Az,Microsoft.Graph,Microsoft.Graph.Beta,ExchangeOnlineManagement,MicrosoftTeams,PnP.PowerShell'
 ENV MODULES=${MODULES}
 
-ARG MODULE_VERSIONS='11.3:11.65535,2.13:2.65535,2.13:2.65535,3.4:3.65535,2.3:2.65535'
+ARG MODULE_VERSIONS='11.3:11.65535,2.13:2.65535,2.13:2.65535,3.4:3.65535,6.0:2.65535,2.3:2.65535'
 ENV MODULE_VERSIONS=${MODULE_VERSIONS}
 
 # Define ENVs for Localization/Globalization
