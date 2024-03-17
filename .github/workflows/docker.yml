@@ -63,7 +63,7 @@ jobs:
           provenance: false
           labels: |
             org.opencontainers.image.created=${{ env.DATE }}
-            org.opencontainers.image.source=https://github.com/Workoho/AzAuto-Common-Runbook-FW.Docker/blob/${{ github.sha }}/linux/amd64/Dockerfile
+            org.opencontainers.image.source=https://github.com/workoho/AzAuto-Common-Runbook-FW.Docker/blob/${{ github.sha }}/linux/amd64/Dockerfile
 
   merge:
     name: Update :latest manifest
@@ -103,14 +103,14 @@ jobs:
             ghcr.io/${{ env.GITHUB_REPO_LOWER }}:debian-12-arm64
           manifest=$(docker manifest inspect ghcr.io/${{ env.GITHUB_REPO_LOWER }}:latest)
           title="Azure Automation Common Runbook Framework"
-          url="https://github.com/Workoho/AzAuto-Common-Runbook-FW"
-          documentation="https://github.com/Workoho/AzAuto-Common-Runbook-FW/wiki"
+          url="https://github.com/workoho/AzAuto-Common-Runbook-FW"
+          documentation="https://github.com/workoho/AzAuto-Common-Runbook-FW/wiki"
           authors="Workoho GmbH"
           vendor="Workoho GmbH"
           licenses="MIT"
           description="This custom Microsoft PowerShell image is provided with pre-installed PowerShell modules that enable faster startup of development containers. It is compatible for x64 and ARM64 architectures, including Apple Silicon Macs."
           created="${{ env.DATE }}"
-          source="https://github.com/Workoho/AzAuto-Common-Runbook-FW.Docker/tree/${{ github.sha }}"
+          source="https://github.com/workoho/AzAuto-Common-Runbook-FW.Docker/tree/${{ github.sha }}"
           annotations=".annotations = {
             \"org.opencontainers.image.title\": \"$title\",
             \"org.opencontainers.image.url\": \"$url\",

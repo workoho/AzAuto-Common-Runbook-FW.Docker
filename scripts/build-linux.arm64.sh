@@ -16,7 +16,7 @@ trap "{ popd > /dev/null; docker logout ghcr.io; gh auth logout; }" EXIT
 docker build \
     --file ./linux/arm64/Dockerfile \
     --label "org.opencontainers.image.created=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" \
-    --label "org.opencontainers.image.source=https://github.com/Workoho/AzAuto-Common-Runbook-FW.Docker/blob/$(git rev-parse HEAD)/linux/arm64/Dockerfile" \
+    --label "org.opencontainers.image.source=https://github.com/workoho/AzAuto-Common-Runbook-FW.Docker/blob/$(git rev-parse HEAD)/linux/arm64/Dockerfile" \
     -t azauto-common-runbook-fw:debian-12-arm64 \
     ./linux/arm64
 if [ $? -ne 0 ]; then

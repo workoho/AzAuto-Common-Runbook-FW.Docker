@@ -1,10 +1,10 @@
 # Development Container for Azure Automation Common Runbook Framework
 
 [![View on GitHub Container Registry](https://img.shields.io/badge/View%20on-GitHub%20Container%20Registry-blue?logo=github)](https://ghcr.io/workoho/azauto-common-runbook-fw)
-[![Build Docker Image](https://github.com/Workoho/AzAuto-Common-Runbook-FW.Docker/actions/workflows/docker.yml/badge.svg)](https://github.com/Workoho/AzAuto-Common-Runbook-FW.Docker/actions/workflows/docker.yml)
-[![Check Upstream](https://github.com/Workoho/AzAuto-Common-Runbook-FW.Docker/actions/workflows/upstreams.yml/badge.svg)](https://github.com/Workoho/AzAuto-Common-Runbook-FW.Docker/actions/workflows/upstreams.yml)
+[![Build Docker Image](https://github.com/workoho/AzAuto-Common-Runbook-FW.Docker/actions/workflows/docker.yml/badge.svg)](https://github.com/workoho/AzAuto-Common-Runbook-FW.Docker/actions/workflows/docker.yml)
+[![Check Upstream](https://github.com/workoho/AzAuto-Common-Runbook-FW.Docker/actions/workflows/upstreams.yml/badge.svg)](https://github.com/workoho/AzAuto-Common-Runbook-FW.Docker/actions/workflows/upstreams.yml)
 
-This repository contains the build data for the custom Microsoft PowerShell image provided by the [Azure Automation Common Runbook Framework](https://github.com/Workoho/AzAuto-Common-Runbook-FW) for Azure Automation runbook development.
+This repository contains the build data for the custom Microsoft PowerShell image provided by the [Azure Automation Common Runbook Framework](https://github.com/workoho/AzAuto-Common-Runbook-FW) for Azure Automation runbook development.
 
 It is provided with pre-installed PowerShell modules that enable faster startup of development containers. The image is compatible for x64 and ARM64 architectures, including Apple Silicon Macs.
 
@@ -12,7 +12,7 @@ It is provided with pre-installed PowerShell modules that enable faster startup 
 
 Ready-to-use images can be retrieved from the [GitHub Container Registry](https://ghcr.io/workoho/azauto-common-runbook-fw).
 
-**We recommend you start with our [project template](https://github.com/Workoho/AzAuto-Project.tmpl) which comes with a pre-configured development container and Visual Studio Code setup.** Using free GitHub Codespaces, you may even start directly in your browser:
+**We recommend you start with our [project template](https://github.com/workoho/AzAuto-Project.tmpl) which comes with a pre-configured development container and Visual Studio Code setup.** Using free GitHub Codespaces, you may even start directly in your browser:
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Workoho/AzAuto-Project.tmpl)
 
@@ -40,4 +40,4 @@ The development container is designed so that it can be rebuilt at any time with
 
 
 
-[^1]: Except for ARM64 / Apple Silicon variant. See [linux/arm64/README.md](https://github.com/Workoho/AzAuto-Common-Runbook-FW.Docker/blob/main/linux/arm64/README.md).
+[^1]: Except for ARM64 / Apple Silicon variant. See [linux/arm64/README.md](https://github.com/workoho/AzAuto-Common-Runbook-FW.Docker/blob/main/linux/arm64/README.md).
