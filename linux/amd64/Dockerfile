@@ -8,10 +8,10 @@ LABEL org.opencontainers.image.title="Azure Automation Common Runbook Framework"
       org.opencontainers.image.licenses="MIT" \
       org.opencontainers.image.description="This custom PowerShell image is provided with pre-installed PowerShell modules that enable faster startup of development containers. It is based on the latest official PowerShell image from Microsoft, which in turn is based on Debian 12 (Bookworm)."
 
-ARG MODULES='Az,Microsoft.Graph,Microsoft.Graph.Beta,ExchangeOnlineManagement,PnP.PowerShell'
+ARG MODULES='Az,Microsoft.Graph,Microsoft.Graph.Beta,ExchangeOnlineManagement,MicrosoftTeams,PnP.PowerShell'
 ENV MODULES=${MODULES}
 
-ARG MODULE_VERSIONS='11.3:11.65535,2.13:2.65535,2.13:2.65535,3.4:3.65535,2.3:2.65535'
+ARG MODULE_VERSIONS='11.3:11.65535,2.13:2.65535,2.13:2.65535,3.4:3.65535,6.0:6.65535,2.3:2.65535'
 ENV MODULE_VERSIONS=${MODULE_VERSIONS}
 
 RUN export POWERSHELL_TELEMETRY_OPTOUT=1 \
