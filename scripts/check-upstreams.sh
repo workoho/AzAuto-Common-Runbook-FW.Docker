@@ -22,7 +22,12 @@ for image in "${IMAGES[@]}"; do
     PREVIOUS_DIGEST=$(echo "$PREVIOUS_DIGESTS" | grep "^$image " | cut -d' ' -f2- || echo "")
     if [ "$LATEST_DIGEST" != "$PREVIOUS_DIGEST" ]; then
         CHANGED=true
-        echo -e "\e[31mThe upstream image $image has changed.\e[0m" >&3
+        if [ "$GITHUB_ACTIONS" == "true" ]; then
+            # Write to file descriptor 3, which is the file descriptor for the GitHub Actions runner to detect changes
+            echo -e "\e[31mThe upstream image $image has changed.\e[0m" >&3
+        else
+            echo -e "\e[31mThe upstream image $image has changed.\e[0m"
+        fi
     else
         echo -e "\e[32mThe upstream image $image has not changed.\e[0m"
     fi
@@ -59,13 +64,22 @@ if docker image inspect $IMAGE_NAME >/dev/null 2>&1; then
             }
         "
         if [ $? -eq 1 ]; then
-            # Write to file descriptor 3, which is the file descriptor for the GitHub Actions runner to detect changes
-            echo -e "\e[31mThe upstream PowerShell modules have changed.\e[0m" >&3
+            if [ "$GITHUB_ACTIONS" == "true" ]; then
+                # Write to file descriptor 3, which is the file descriptor for the GitHub Actions runner to detect changes
+                echo -e "\e[31mThe upstream PowerShell modules have changed.\e[0m" >&3
+            else
+                echo -e "\e[31mThe upstream PowerShell modules have changed.\e[0m"
+            fi
             exit 0
         fi
     done
 else
-    echo -e "\e[31mThe image $IMAGE_NAME was not found, triggering re-build.\e[0m" >&3
+    if [ "$GITHUB_ACTIONS" == "true" ]; then
+        # Write to file descriptor 3, which is the file descriptor for the GitHub Actions runner to detect changes
+        echo -e "\e[31mThe image $IMAGE_NAME was not found, triggering re-build.\e[0m" >&3
+    else
+        echo -e "\e[31mThe image $IMAGE_NAME was not found, triggering re-build.\e[0m"
+    fi
     exit 0
 fi
 
