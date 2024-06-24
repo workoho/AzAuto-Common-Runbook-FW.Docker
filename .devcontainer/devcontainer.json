@@ -53,8 +53,11 @@
         // YAML related extensions
         "redhat.vscode-yaml",
 
-        // Docker related extensions
-        "ms-azuretools.vscode-docker"
+        // Azure related extensions
+        "ms-azuretools.vscode-azureresourcegroups",
+        "ms-azuretools.vscode-azurestorage",
+        "ms-azuretools.vscode-docker",
+        "ms-azuretools.vscode-bicep"
 			]
 		}
 	}

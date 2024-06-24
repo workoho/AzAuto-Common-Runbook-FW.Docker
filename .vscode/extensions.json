@@ -1,36 +1,39 @@
 {
-    "recommendations": [
-        // Container development related extensions
-        "ms-vscode-remote.remote-containers",
-        "github.codespaces",
+  "recommendations": [
+    // Container development related extensions
+    "ms-vscode-remote.remote-containers",
+    "github.codespaces",
 
-        // Code Editing related extensions
-        "editorconfig.editorconfig",
+    // Code Editing related extensions
+    "editorconfig.editorconfig",
 
-        // Git related extensions
-        "mhutchie.git-graph",
-        "donjayamanne.githistory",
-        "eamodio.gitlens",
+    // Git related extensions
+    "mhutchie.git-graph",
+    "donjayamanne.githistory",
+    "eamodio.gitlens",
 
-        // GitHub related extensions
-        "ms-vscode.vscode-github-issue-notebooks",
-        "github.vscode-pull-request-github",
-        "bierner.github-markdown-preview",
-        "github.vscode-github-actions",
-        "me-dutour-mathieu.vscode-github-actions",
+    // GitHub related extensions
+    "ms-vscode.vscode-github-issue-notebooks",
+    "github.vscode-pull-request-github",
+    "bierner.github-markdown-preview",
+    "github.vscode-github-actions",
+    "me-dutour-mathieu.vscode-github-actions",
 
-        // Markdown related extensions
-        "davidanson.vscode-markdownlint",
-        "yzhang.markdown-all-in-one",
+    // Markdown related extensions
+    "davidanson.vscode-markdownlint",
+    "yzhang.markdown-all-in-one",
 
-        // PowerShell related extensions
-        "ms-vscode.powershell",
-        "martinfliegner.dark-powershell-theme",
+    // PowerShell related extensions
+    "ms-vscode.powershell",
+    "martinfliegner.dark-powershell-theme",
 
-        // YAML related extensions
-        "redhat.vscode-yaml",
+    // YAML related extensions
+    "redhat.vscode-yaml",
 
-        // Docker related extensions
-        "ms-azuretools.vscode-docker"
-    ]
+    // Azure related extensions
+    "ms-azuretools.vscode-azureresourcegroups",
+    "ms-azuretools.vscode-azurestorage",
+    "ms-azuretools.vscode-docker",
+    "ms-azuretools.vscode-bicep"
+  ]
 }

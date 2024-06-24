@@ -7,14 +7,11 @@ FROM arm64v8/debian:bookworm AS installer-env
 RUN --mount=type=cache,target=/var/lib/apt \
     --mount=type=cache,target=/var/cache/apt \
     DEBIAN_FRONTEND=noninteractive apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
+    && DEBIAN_FRONTEND=noninteractive apt-get install --assume-yes --no-install-recommends -y \
     # curl is required to grab the Linux package
         curl \
         tar \
-    # less is required for help in powershell
-        less \
-    # requied to setup the locale
-        locales \
+        gnupg \
     # required for SSL
         ca-certificates \
     # Download the Linux package and save it
@@ -31,12 +28,12 @@ LABEL org.opencontainers.image.title="Azure Automation Common Runbook Framework"
       org.opencontainers.image.authors="Workoho GmbH" \
       org.opencontainers.image.vendor="Workoho GmbH" \
       org.opencontainers.image.licenses="MIT" \
-      org.opencontainers.image.description="This custom PowerShell image is provided with pre-installed PowerShell modules that enable faster startup of development containers. It is based on Debian 12 (Bookworm) to run on ARM-based devices, including Apple Silicon Macs, and installs the latest PowerShell version as long as Microsoft does not provide an official ARM64 image."
+      org.opencontainers.image.description="This custom PowerShell image is provided with pre-installed PowerShell modules as well as Azure CLI and Bicep CLI that enable faster startup of development containers. It is based on Debian 12 (Bookworm) to run on ARM-based devices, including Apple Silicon Macs, and installs the latest PowerShell version as long as Microsoft does not provide an official ARM64 image."
 
 ARG MODULES='Az,Microsoft.Graph,Microsoft.Graph.Beta,ExchangeOnlineManagement,MicrosoftTeams,PnP.PowerShell'
 ENV MODULES=${MODULES}
 
-ARG MODULE_VERSIONS='11.3:11.65535,2.13:2.65535,2.13:2.65535,3.4:3.65535,6.0:6.65535,2.3:2.65535'
+ARG MODULE_VERSIONS='12.0:12.65535,2.0:2.65535,2.0:2.65535,3.0:3.65535,6.0:6.65535,2.0:2.65535'
 ENV MODULE_VERSIONS=${MODULE_VERSIONS}
 
 # Define ENVs for Localization/Globalization
@@ -52,11 +49,11 @@ ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false \
 RUN --mount=from=installer-env,target=/mnt/pwsh,source=/tmp \
     --mount=type=cache,target=/var/lib/apt \
     --mount=type=cache,target=/var/cache/apt \
-      apt-get update \
-    && apt-get install --no-install-recommends -y \
+    DEBIAN_FRONTEND=noninteractive apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install --assume-yes --no-install-recommends -y \
     # less is required for help in powershell
         less \
-    # requied to setup the locale
+    # required to setup the locale
         locales \
     # required for SSL
         ca-certificates \
@@ -71,8 +68,13 @@ RUN --mount=from=installer-env,target=/mnt/pwsh,source=/tmp \
         zlib1g \
     # PowerShell remoting over SSH dependencies
         openssh-client \
+    # Azure CLI dependencies
+        curl \
     && apt-get dist-upgrade -y \
     && locale-gen $LANG && update-locale \
+    # Install Azure CLI
+    && curl -sSL https://aka.ms/InstallAzureCLIDeb | bash \
+    && az bicep install \
     && export POWERSHELL_TELEMETRY_OPTOUT=1 \
     # Create PowerShell folder
     && mkdir -p ${PS_INSTALL_FOLDER} \
@@ -114,7 +116,9 @@ RUN --mount=from=installer-env,target=/mnt/pwsh,source=/tmp \
               Write-Error 'Invalid version format for module \$module' ; \
               exit 1 ; \
             } \
-          }"
+          }" \
+          # Clean up
+          && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Use PowerShell as the default shell
 # Use array to avoid Docker prepending /bin/sh -c

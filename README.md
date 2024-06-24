@@ -6,7 +6,7 @@
 
 This repository contains the build data for the custom Microsoft PowerShell image provided by the [Azure Automation Common Runbook Framework](https://github.com/workoho/AzAuto-Common-Runbook-FW) for Azure Automation runbook development.
 
-It is provided with pre-installed PowerShell modules that enable faster startup of development containers. The image is compatible for x64 and ARM64 architectures, including Apple Silicon Macs.
+It is provided with pre-installed PowerShell modules as well as Azure CLI and Bicep CLI that enable faster startup of development containers. The image is compatible for x64 and ARM64 architectures, including Apple Silicon Macs.
 
 ## How To Use
 
@@ -20,7 +20,7 @@ Ready-to-use images can be retrieved from the [GitHub Container Registry](https:
 
 | Module                           | Version Tree |
 | ---------------------------------|:------------:|
-| [Azure Az][1]                    |         11.x |
+| [Azure Az][1]                    |         12.x |
 | [ExchangeOnlineManagement][2]    |          3.x |
 | [Microsoft.Graph][3]             |          2.x |
 | [Microsoft.Graph.Beta][4]        |          2.x |
