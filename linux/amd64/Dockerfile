@@ -42,6 +42,11 @@ RUN --mount=type=cache,target=/var/lib/apt \
     # Install Azure CLI
     && curl -sSL https://aka.ms/InstallAzureCLIDeb | bash \
     && az bicep install \
+    # Install Azure CLI extensions
+    && az extension add --allow-preview true --name azure-devops \
+    && az extension add --allow-preview true --name interactive \
+    && az extension add --allow-preview true --name resource-graph \
+    && az extension add --allow-preview true --name storage-preview \
     && export POWERSHELL_TELEMETRY_OPTOUT=1 \
     && pwsh \
       -NoLogo \
