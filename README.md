@@ -24,15 +24,19 @@ Ready-to-use images can be retrieved from the [GitHub Container Registry](https:
 | [ExchangeOnlineManagement][2]    |          3.x |
 | [Microsoft.Graph][3]             |          2.x |
 | [Microsoft.Graph.Beta][4]        |          2.x |
-| [MicrosoftTeams][5]              |          6.x |
-| [PnP.PowerShell][6]              |          2.x |
+| [Microsoft.Graph.Entra][5]       |          0.x |
+| [Microsoft.Graph.Entra.Beta][6]  |          0.x |
+| [MicrosoftTeams][7]              |          6.x |
+| [PnP.PowerShell][8]              |          2.x |
 
 [1]: https://learn.microsoft.com/en-us/powershell/azure/new-azureps-module-az
 [2]: https://learn.microsoft.com/en-us/powershell/exchange/exchange-online-powershell
 [3]: https://learn.microsoft.com/en-us/powershell/microsoftgraph/?view=graph-powershell-1.0
 [4]: https://learn.microsoft.com/en-us/powershell/microsoftgraph/?view=graph-powershell-beta
-[5]: https://learn.microsoft.com/en-us/microsoftteams/teams-powershell-overview
-[6]: https://pnp.github.io/powershell/
+[5]: https://learn.microsoft.com/en-gb/powershell/module/microsoft.graph.entra/?view=entra-powershell-1.0
+[6]: https://learn.microsoft.com/en-gb/powershell/module/microsoft.graph.entra/?view=entra-powershell-beta
+[7]: https://learn.microsoft.com/en-us/microsoftteams/teams-powershell-overview
+[8]: https://pnp.github.io/powershell/
 
 ## How To Update
 

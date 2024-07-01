@@ -30,10 +30,10 @@ LABEL org.opencontainers.image.title="Azure Automation Common Runbook Framework"
       org.opencontainers.image.licenses="MIT" \
       org.opencontainers.image.description="This custom PowerShell image is provided with pre-installed PowerShell modules as well as Azure CLI and Bicep CLI that enable faster startup of development containers. It is based on Debian 12 (Bookworm) to run on ARM-based devices, including Apple Silicon Macs, and installs the latest PowerShell version as long as Microsoft does not provide an official ARM64 image."
 
-ARG MODULES='Az,Microsoft.Graph,Microsoft.Graph.Beta,ExchangeOnlineManagement,MicrosoftTeams,PnP.PowerShell'
+ARG MODULES='Az,Microsoft.Graph,Microsoft.Graph.Beta,Microsoft.Graph.Entra,Microsoft.Graph.Entra.Beta,ExchangeOnlineManagement,MicrosoftTeams,PnP.PowerShell'
 ENV MODULES=${MODULES}
 
-ARG MODULE_VERSIONS='12.0:12.65535,2.0:2.65535,2.0:2.65535,3.0:3.65535,6.0:6.65535,2.0:2.65535'
+ARG MODULE_VERSIONS='12.0:12.65535,2.0:2.65535,2.0:2.65535,0.0-preview:1.65535,0.0-preview:1.65535,3.0:3.65535,6.0:6.65535,2.0:2.65535'
 ENV MODULE_VERSIONS=${MODULE_VERSIONS}
 
 # Define ENVs for Localization/Globalization
@@ -109,19 +109,20 @@ RUN --mount=from=installer-env,target=/mnt/pwsh,source=/tmp \
           for (\$i = 0; \$i -lt \$modules.Length; \$i++) { \
             \$module = \$modules[\$i] ; \
             \$version = \$module_versions[\$i] ; \
-            if (\$version -eq 'latest') { \
-              Install-Module \$module -Scope AllUsers -AllowClobber -Force -Verbose ; \
-              continue ; \
-            } elseif (\$version -match '^\d+(\.\d+)*:\d+(\.\d+)*$') { \
-              Install-Module \$module -Scope AllUsers -AllowClobber -Force -Verbose -MinimumVersion \$version.Split(':')[0] -MaximumVersion \$version.Split(':')[1] ; \
-              continue ; \
-            } elseif (\$version -match '^\d+(\.\d+)*$') { \
-              Install-Module \$module -Scope AllUsers -AllowClobber -Force -Verbose -RequiredVersion \$version ; \
-              continue ; \
+            \$params = @{ Name = \$module ; Scope = 'AllUsers' ; AllowClobber = \$true ; Force = \$true ; Verbose = \$true } ; \
+            if (\$version -match '^(?:(\d+(?:\.\d+)*)(?:-(.+))?|\*):(?:(\d+(?:\.\d+)*)(?:-(.+))?|\*)\$') { \
+              if (\$Matches[1] -and \$Matches[1] -ne '*') { \$params.MinimumVersion = \$Matches[1] } ; \
+              if (\$Matches[2]) { \$params.AllowPrerelease = \$true } ; \
+              if (\$Matches[3] -and \$Matches[4] -ne '*') { \$params.MaximumVersion = \$Matches[4] } ; \
+              if (\$Matches[4]) { \$params.AllowPrerelease = \$true } ; \
+            } elseif (\$version -match '^(\d+(?:\.\d+)*)(?:-(.+))?\$') { \
+              \$params.RequiredVersion = \$Matches[0] ; \
+              if (\$Matches[2]) { \$params.AllowPrerelease = \$true } ; \
             } else { \
               Write-Error 'Invalid version format for module \$module' ; \
               exit 1 ; \
             } \
+            Install-Module @params ; \
           }" \
           # Clean up
           && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
