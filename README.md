@@ -20,7 +20,7 @@ Ready-to-use images can be retrieved from the [GitHub Container Registry](https:
 
 | Module                           | Version Tree |
 | ---------------------------------|:------------:|
-| [Azure Az][1]                    |         12.x |
+| [Azure Az][1]                    |         14.x |
 | [ExchangeOnlineManagement][2]    |          3.x |
 | [Microsoft.Graph][3]             |          2.x |
 | [Microsoft.Graph.Beta][4]        |          2.x |

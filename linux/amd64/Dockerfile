@@ -11,7 +11,7 @@ LABEL org.opencontainers.image.title="Azure Automation Common Runbook Framework"
 ARG MODULES='Az,Microsoft.Graph,Microsoft.Graph.Beta,Microsoft.Graph.Entra,Microsoft.Graph.Entra.Beta,ExchangeOnlineManagement,MicrosoftTeams,PnP.PowerShell'
 ENV MODULES=${MODULES}
 
-ARG MODULE_VERSIONS='12.0:12.65535,2.0:2.65535,2.0:2.65535,0.0-preview:1.65535,0.0-preview:1.65535,3.0:3.65535,6.0:6.65535,2.0:2.65535'
+ARG MODULE_VERSIONS='14.0:14.65535,2.0:2.65535,2.0:2.65535,0.0-preview:1.65535,0.0-preview:1.65535,3.0:3.65535,6.0:6.65535,2.0:2.65535'
 ENV MODULE_VERSIONS=${MODULE_VERSIONS}
 
 RUN --mount=type=cache,target=/var/lib/apt \
